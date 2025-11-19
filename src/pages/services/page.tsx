@@ -1,70 +1,12 @@
-import { useState } from 'react';
+import Header from '../../components/layout/Header';
+import Footer from '../../components/layout/Footer';
+import researchAndDevelopmentImg from '../../assets/images/Research &Development.webp';
 
 export default function Services() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] font-['Manrope',sans-serif]">
-      {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0a]/95 backdrop-blur-md border-b border-white/5">
-        <div className="w-full px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20 max-w-7xl mx-auto">
-            {/* Logo */}
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-lg flex items-center justify-center">
-                <i className="ri-brain-line text-white text-xl"></i>
-              </div>
-              <div>
-                <h1 className="text-white font-bold text-xl tracking-tight">Trinova AI</h1>
-              </div>
-            </div>
-
-            {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center space-x-8">
-              <a href="/" className="text-white/80 hover:text-cyan-400 transition-colors duration-300 font-medium cursor-pointer">Home</a>
-              <a href="/services" className="text-white hover:text-cyan-400 transition-colors duration-300 font-medium cursor-pointer">Our Services</a>
-              <a href="/ems" className="text-white/80 hover:text-cyan-400 transition-colors duration-300 font-medium cursor-pointer">EMS</a>
-              <a href="/ai" className="text-white/80 hover:text-cyan-400 transition-colors duration-300 font-medium cursor-pointer">AI</a>
-              <a href="/our-edge" className="text-white/80 hover:text-cyan-400 transition-colors duration-300 font-medium cursor-pointer">Our Edge</a>
-              <a href="/testimonials" className="text-white/80 hover:text-cyan-400 transition-colors duration-300 font-medium cursor-pointer">Testimonials</a>
-              <a href="/contact" className="text-white/80 hover:text-cyan-400 transition-colors duration-300 font-medium cursor-pointer">Contact Us</a>
-            </div>
-
-            {/* CTA Button */}
-            <div className="hidden lg:block">
-              <button className="px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-cyan-500/50 transition-all duration-300 whitespace-nowrap cursor-pointer">
-                Start a Project
-              </button>
-            </div>
-
-            {/* Mobile Menu Button */}
-            <button 
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="lg:hidden text-white w-10 h-10 flex items-center justify-center cursor-pointer"
-            >
-              <i className={`${isMenuOpen ? 'ri-close-line' : 'ri-menu-line'} text-2xl`}></i>
-            </button>
-          </div>
-
-          {/* Mobile Menu */}
-          {isMenuOpen && (
-            <div className="lg:hidden py-6 border-t border-white/5">
-              <div className="flex flex-col space-y-4">
-                <a href="/" className="text-white/80 hover:text-cyan-400 transition-colors duration-300 font-medium cursor-pointer">Home</a>
-                <a href="/services" className="text-white hover:text-cyan-400 transition-colors duration-300 font-medium cursor-pointer">Our Services</a>
-                <a href="/ems" className="text-white/80 hover:text-cyan-400 transition-colors duration-300 font-medium cursor-pointer">EMS</a>
-                <a href="/ai" className="text-white/80 hover:text-cyan-400 transition-colors duration-300 font-medium cursor-pointer">AI</a>
-                <a href="/our-edge" className="text-white/80 hover:text-cyan-400 transition-colors duration-300 font-medium cursor-pointer">Our Edge</a>
-                <a href="/testimonials" className="text-white/80 hover:text-cyan-400 transition-colors duration-300 font-medium cursor-pointer">Testimonials</a>
-                <a href="/contact" className="text-white/80 hover:text-cyan-400 transition-colors duration-300 font-medium cursor-pointer">Contact Us</a>
-                <button className="px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-cyan-500/50 transition-all duration-300 whitespace-nowrap cursor-pointer w-full">
-                  Start a Project
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
-      </nav>
+    <div className="min-h-screen bg-[#252525] font-['Manrope',sans-serif]">
+      <Header active="services" />
 
       {/* Hero Section */}
       <section className="relative min-h-[70vh] flex items-center overflow-hidden pt-20 bg-gradient-to-br from-[#0a0a0a] via-[#0f1419] to-[#0a0a0a]">
@@ -162,7 +104,7 @@ export default function Services() {
                   <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/20 via-blue-600/20 to-purple-600/20 rounded-2xl blur-xl"></div>
                   <div className="relative h-full bg-gradient-to-br from-[#1a1a2e] to-[#0a0a0a] rounded-2xl border border-cyan-500/20 overflow-hidden">
                     <img 
-                      src="https://readdy.ai/api/search-image?query=Scientists and engineers in modern laboratory reviewing complex digital blueprints and simulations on large high-resolution displays, advanced R&D environment with holographic projections, dark ambient lighting with blue cyan accents, photorealistic style with professional composition, innovation and research atmosphere, clean minimalist background&width=600&height=500&seq=rd-service-image&orientation=landscape"
+                      src={researchAndDevelopmentImg}
                       alt="Scientists reviewing digital blueprints and simulations"
                       className="w-full h-full object-cover object-center opacity-90"
                     />
@@ -745,110 +687,7 @@ export default function Services() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="relative bg-[#0a0a0a] border-t border-white/5 overflow-hidden">
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute top-0 left-0 w-96 h-96 bg-cyan-500 rounded-full blur-[120px]"></div>
-          <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-600 rounded-full blur-[120px]"></div>
-        </div>
-
-        <div className="relative max-w-7xl mx-auto px-6 lg:px-8 py-16 lg:py-24">
-          <div className="grid lg:grid-cols-3 gap-12 lg:gap-16 mb-12">
-            <div className="space-y-6">
-              <div className="flex items-center space-x-3">
-                <div className="w-12 h-12 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-lg flex items-center justify-center">
-                  <i className="ri-brain-line text-white text-2xl"></i>
-                </div>
-                <div>
-                  <h3 className="text-white font-bold text-2xl tracking-tight">Trinova AI</h3>
-                  <p className="text-cyan-400 text-sm font-medium">Technologies Private Limited</p>
-                </div>
-              </div>
-
-              <p className="text-white/70 leading-relaxed">
-                Pioneering the future of intelligent electronics and AI solutions through innovative hardware design, advanced R&D, and end-to-end product development.
-              </p>
-
-              <div className="flex items-center space-x-4">
-                <a href="#" className="w-10 h-10 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 hover:border-cyan-400/50 rounded-lg flex items-center justify-center transition-all duration-300 cursor-pointer group">
-                  <i className="ri-linkedin-fill text-cyan-400 group-hover:text-cyan-300 text-lg"></i>
-                </a>
-                <a href="#" className="w-10 h-10 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 hover:border-cyan-400/50 rounded-lg flex items-center justify-center transition-all duration-300 cursor-pointer group">
-                  <i className="ri-instagram-line text-cyan-400 group-hover:text-cyan-300 text-lg"></i>
-                </a>
-                <a href="#" className="w-10 h-10 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 hover:border-cyan-400/50 rounded-lg flex items-center justify-center transition-all duration-300 cursor-pointer group">
-                  <i className="ri-facebook-fill text-cyan-400 group-hover:text-cyan-300 text-lg"></i>
-                </a>
-              </div>
-            </div>
-
-            <div className="space-y-6">
-              <h3 className="text-white font-bold text-xl">Contact Information</h3>
-              
-              <div className="space-y-4">
-                <div className="flex items-start space-x-3">
-                  <div className="w-10 h-10 bg-cyan-500/10 rounded-lg flex items-center justify-center">
-                    <i className="ri-phone-line text-cyan-400 text-lg"></i>
-                  </div>
-                  <div>
-                    <div className="text-white font-medium">Phone</div>
-                    <a href="tel:+918310694003" className="text-white/70 hover:text-cyan-400 transition-colors duration-300 cursor-pointer">
-                      +91 83106 94003
-                    </a>
-                  </div>
-                </div>
-
-                <div className="flex items-start space-x-3">
-                  <div className="w-10 h-10 bg-blue-500/10 rounded-lg flex items-center justify-center">
-                    <i className="ri-mail-line text-blue-400 text-lg"></i>
-                  </div>
-                  <div>
-                    <div className="text-white font-medium">Email</div>
-                    <a href="mailto:technical@trinovaaitech.com" className="text-white/70 hover:text-cyan-400 transition-colors duration-300 cursor-pointer">
-                      technical@trinovaaitech.com
-                    </a>
-                  </div>
-                </div>
-
-                <div className="flex items-start space-x-3">
-                  <div className="w-10 h-10 bg-cyan-500/10 rounded-lg flex items-center justify-center">
-                    <i className="ri-map-pin-line text-cyan-400 text-lg"></i>
-                  </div>
-                  <div>
-                    <div className="text-white font-medium">Address</div>
-                    <div className="text-white/70 leading-relaxed">
-                      No-1461, 2nd floor, 14th cross road,<br />
-                      Ananth Nagar phase2, Electronic City,<br />
-                      Bangalore - 560100
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-6">
-              <h3 className="text-white font-bold text-xl">Quick Links</h3>
-              
-              <div className="grid grid-cols-1 gap-3">
-                <a href="/" className="text-white/70 hover:text-cyan-400 transition-colors duration-300 cursor-pointer">Home</a>
-                <a href="/services" className="text-white/70 hover:text-cyan-400 transition-colors duration-300 cursor-pointer">Our Services</a>
-                <a href="/ems" className="text-white/70 hover:text-cyan-400 transition-colors duration-300 cursor-pointer">EMS</a>
-                <a href="/ai" className="text-white/70 hover:text-cyan-400 transition-colors duration-300 cursor-pointer">AI</a>
-                <a href="/our-edge" className="text-white/70 hover:text-cyan-400 transition-colors duration-300 cursor-pointer">Our Edge</a>
-                <a href="/testimonials" className="text-white/70 hover:text-cyan-400 transition-colors duration-300 cursor-pointer">Testimonials</a>
-                <a href="/contact" className="text-white/70 hover:text-cyan-400 transition-colors duration-300 cursor-pointer">Contact Us</a>
-              </div>
-            </div>
-          </div>
-
-          {/* Bottom Bar */}
-          <div className="pt-8 border-t border-white/5">
-            <div className="text-white/60 text-sm text-center lg:text-left">
-              Copyright © 2025 Trinova AI Technologies Private Limited. All rights reserved.
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
