@@ -389,6 +389,90 @@ export default function EMS() {
                 </div>
               </div>
             </div>
+
+            {/* Service 5: Board Bring-Up and Hardware Testing - Image Left */}
+            <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+              <div className="relative lg:h-[500px] h-[350px]">
+                <div className="relative h-full rounded-2xl overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-cyan-600/20 to-purple-600/20 rounded-2xl blur-xl"></div>
+                  <div className="relative h-full bg-gradient-to-br from-[#1a1a2e] to-[#0a0a0a] rounded-2xl border border-blue-500/20 overflow-hidden">
+                    <img
+                      src='/images/board-bring-up-hardware-testing.jpg'
+                      alt="Engineer testing PCB with oscilloscope and multimeter"
+                      className="w-full h-full object-cover object-center opacity-90"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-6">
+                <div className="inline-flex items-center space-x-2 px-4 py-2 bg-blue-500/10 border border-blue-500/30 rounded-full">
+                  <i className="ri-test-tube-line text-blue-400"></i>
+                  <span className="text-blue-400 text-sm font-semibold">
+                    Step 5
+                  </span>
+                </div>
+
+                <h3 className="text-3xl lg:text-4xl font-black text-white leading-tight">
+                  Board Bring-Up &
+                  <span className="block bg-gradient-to-r from-blue-400 to-cyan-500 bg-clip-text text-transparent">
+                    Hardware Testing
+                  </span>
+                </h3>
+
+                <p className="text-lg text-white/70 leading-relaxed">
+                  <strong>Focus:</strong> We provide comprehensive Board Bring-Up
+                  and Hardware Testing services to ensure your electronic designs
+                  move seamlessly from prototype to production. Our experienced
+                  engineering team thoroughly validates every aspect of your PCB,
+                  guaranteeing optimal performance, high reliability, and full
+                  compliance with your product requirements.
+                </p>
+
+                <div className="space-y-4">
+                  <div>
+                    <h4 className="text-white font-semibold mb-2">
+                      Key Services:
+                    </h4>
+                    <div className="grid grid-cols-1 gap-3">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-6 h-6 bg-blue-500/10 rounded-lg flex items-center justify-center">
+                          <i className="ri-flashlight-line text-blue-400 text-sm"></i>
+                        </div>
+                        <span className="text-white/80 text-sm">
+                          Initial Power-On and Basic Functionality Testing
+                        </span>
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <div className="w-6 h-6 bg-cyan-500/10 rounded-lg flex items-center justify-center">
+                          <i className="ri-radar-line text-cyan-400 text-sm"></i>
+                        </div>
+                        <span className="text-white/80 text-sm">
+                          Signal Integrity and Power Integrity Analysis
+                        </span>
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <div className="w-6 h-6 bg-blue-500/10 rounded-lg flex items-center justify-center">
+                          <i className="ri-settings-3-line text-blue-400 text-sm"></i>
+                        </div>
+                        <span className="text-white/80 text-sm">
+                          Firmware Integration and System Validation
+                        </span>
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <div className="w-6 h-6 bg-cyan-500/10 rounded-lg flex items-center justify-center">
+                          <i className="ri-file-list-3-line text-cyan-400 text-sm"></i>
+                        </div>
+                        <span className="text-white/80 text-sm">
+                          Comprehensive Test Reports and Documentation
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>

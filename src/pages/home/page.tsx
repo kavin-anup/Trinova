@@ -7,8 +7,8 @@ import "swiper/css/pagination";
 const heroSlides = [
   {
     id: "ai-innovation",
-    title: "Pioneering the Future of",
-    highlights: ["Intelligent Electronics", "and AI Solutions"],
+    title: "Your Vision, ",
+    highlights: ["Engineered Into Reality."],
     description:
       "We are the full-stack partner, accelerating innovation from concept to market in hardware, firmware, and advanced AI systems.",
     subDescription:
@@ -19,8 +19,8 @@ const heroSlides = [
   },
   {
     id: "full-stack",
-    title: "From Concept to Scale with",
-    highlights: ["Full-Stack Engineering", "and EMS Excellence"],
+    title: "Your Vision, ",
+    highlights: ["Engineered Into Reality."],
     description:
       "A single partner for research, hardware, firmware, and manufacturing means faster cycles and fewer handoffs.",
     subDescription:
@@ -31,8 +31,8 @@ const heroSlides = [
   },
   {
     id: "intelligent-ops",
-    title: "Operate Smarter with",
-    highlights: ["AI-Enhanced Edge Systems", "and Cloud Visibility"],
+    title: "Your Vision, ",
+    highlights: ["Engineered Into Reality."],
     description:
       "We fuse predictive analytics, secure OTA, and data orchestration so your products learn, adapt, and scale.",
     subDescription:
@@ -68,8 +68,7 @@ export default function Home() {
                     alt={slide.title}
                     className="w-full h-full object-cover object-center"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a]/20 via-[#0a0a0a]/30 to-[#0a0a0a]/20"></div>
-                  {/* <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a]/60 via-[#0a0a0a]/75 to-[#0a0a0a]/60"></div> */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0a]/60 via-[#0a0a0a]/75 to-[#0a0a0a]/60"></div>
                   <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent"></div>
                 </div>
 
@@ -114,7 +113,7 @@ export default function Home() {
                 <div className="relative max-w-7xl mx-auto px-6 lg:px-8 py-24 w-full z-10">
                   <div className="text-center max-w-5xl mx-auto space-y-8">
                     {/* Heading */}
-                    {/* <h2 className="text-5xl md:text-6xl lg:text-7xl font-extrabold text-white leading-[1.1] tracking-tight space-y-2">
+                    <h2 className="text-5xl md:text-6xl lg:text-7xl font-extrabold text-white leading-[1.1] tracking-tight space-y-2">
                       <span>{slide.title}</span>
                       {slide.highlights.map((line) => (
                         <span
@@ -124,7 +123,7 @@ export default function Home() {
                           {line}
                         </span>
                       ))}
-                    </h2> */}
+                    </h2>
 
                     {/* Descriptions */}
                     {/* <p className="text-xl lg:text-2xl text-white/80 leading-relaxed max-w-3xl mx-auto font-medium">
@@ -135,7 +134,7 @@ export default function Home() {
                     </p> */}
 
                     {/* CTAs */}
-                    {/* <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
                       <button className="px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold rounded-xl hover:shadow-2xl hover:shadow-cyan-500/50 hover:scale-105 transition-all duration-300 whitespace-nowrap cursor-pointer group">
                         <span className="flex items-center justify-center space-x-2">
                           <span>{slide.primaryCta.label}</span>
@@ -144,7 +143,7 @@ export default function Home() {
                           ></i>
                         </span>
                       </button>
-                    </div> */}
+                    </div>
                   </div>
                 </div>
               </div>
