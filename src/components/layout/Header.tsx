@@ -1,6 +1,6 @@
-import { useState } from "react";
-
+import { useState, useEffect } from "react";
 import { NAV_LINKS, type NavKey } from "../../constants/navigation";
+import { siteConfigAPI } from "../../services/api";
 
 interface HeaderProps {
   active?: NavKey;
@@ -16,13 +16,30 @@ const getLinkClasses = (isActive: boolean) =>
 
 export default function Header({ active }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [logoUrl, setLogoUrl] = useState("/logo.png");
+
+  useEffect(() => {
+    fetchLogo();
+  }, []);
+
+  const fetchLogo = async () => {
+    try {
+      const response = await siteConfigAPI.get();
+      const config = response.data?.config || {};
+      if (config.header_logo_url) {
+        setLogoUrl(config.header_logo_url);
+      }
+    } catch (error) {
+      console.error('Error fetching logo:', error);
+    }
+  };
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-[#252525]/95 backdrop-blur-md border-b border-white/5">
       <div className="w-full px-6 lg:px-8">
         <div className="flex items-center justify-between h-fit py-2 max-w-7xl mx-auto">
           <a href="/" className="flex items-center space-x-3">
-            <img src="/logo.png" alt="Trinova AI" className="w-[5rem]" />
+            <img src={logoUrl} alt="Trinova AI" className="w-[5rem]" />
           </a>
 
           <div className="hidden lg:flex items-center space-x-8">
@@ -38,9 +55,12 @@ export default function Header({ active }: HeaderProps) {
           </div>
 
           <div className="hidden lg:block">
-            <button className="px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-cyan-500/50 transition-all duration-300 whitespace-nowrap cursor-pointer">
+            <a 
+              href="/contact"
+              className="px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-cyan-500/50 transition-all duration-300 whitespace-nowrap cursor-pointer inline-block"
+            >
               Start a Project
-            </button>
+            </a>
           </div>
 
           <button
@@ -68,9 +88,12 @@ export default function Header({ active }: HeaderProps) {
                   {link.label}
                 </a>
               ))}
-              <button className="px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-cyan-500/50 transition-all duration-300 whitespace-nowrap cursor-pointer w-full">
+              <a 
+                href="/contact"
+                className="px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-cyan-500/50 transition-all duration-300 whitespace-nowrap cursor-pointer w-full text-center"
+              >
                 Start a Project
-              </button>
+              </a>
             </div>
           </div>
         )}
@@ -78,4 +101,3 @@ export default function Header({ active }: HeaderProps) {
     </nav>
   );
 }
-

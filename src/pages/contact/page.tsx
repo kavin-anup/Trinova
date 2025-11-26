@@ -1,8 +1,93 @@
-
 import Header from '../../components/layout/Header';
 import Footer from '../../components/layout/Footer';
+import { useEffect, useState } from 'react';
+import { contactContentAPI, inquiriesAPI, siteConfigAPI } from '../../services/api';
 
 export default function Contact() {
+  const [content, setContent] = useState<any>({});
+  const [siteConfig, setSiteConfig] = useState<any>({});
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  useEffect(() => {
+    fetchContent();
+  }, []);
+
+  const fetchContent = async () => {
+    try {
+      const [contentResponse, configResponse] = await Promise.all([
+        contactContentAPI.get(),
+        siteConfigAPI.get()
+      ]);
+      setContent(contentResponse.data?.content || {});
+      setSiteConfig(configResponse.data?.config || {});
+    } catch (error) {
+      console.error('Error fetching content:', error);
+      setContent({});
+      setSiteConfig({});
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Helper to get content with fallback
+  const getContent = (key: string, fallback: string = '') => {
+    // Check siteConfig first for contact information
+    if (siteConfig[key]) {
+      return siteConfig[key];
+    }
+    // Then check content
+    return content[key]?.value || fallback;
+  };
+
+  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setSubmitting(true);
+    setSubmitMessage(null);
+
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    try {
+      const data = {
+        firstName: formData.get('firstName') as string,
+        lastName: formData.get('lastName') as string,
+        email: formData.get('email') as string,
+        phone: formData.get('phone') as string || undefined,
+        company: formData.get('company') as string || undefined,
+        service: formData.get('service') as string || undefined,
+        message: formData.get('message') as string,
+      };
+
+      const response = await inquiriesAPI.submit(data);
+      
+      if (response.success) {
+        setSubmitMessage({
+          type: 'success',
+          text: response.message || 'Thank you for your inquiry. We will get back to you soon!'
+        });
+        form.reset();
+        // Clear message after 5 seconds
+        setTimeout(() => setSubmitMessage(null), 5000);
+      }
+    } catch (error: any) {
+      setSubmitMessage({
+        type: 'error',
+        text: error.message || 'Failed to submit form. Please try again.'
+      });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#252525] flex items-center justify-center">
+        <i className="ri-loader-4-line text-cyan-400 text-4xl animate-spin"></i>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#252525] font-['Manrope',sans-serif]">
@@ -34,20 +119,20 @@ export default function Contact() {
             {/* Badge */}
             <div className="inline-flex items-center space-x-2 px-5 py-2.5 bg-cyan-500/10 border border-cyan-500/30 rounded-full backdrop-blur-sm">
               <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></div>
-              <span className="text-cyan-400 text-sm font-semibold tracking-wide">Get In Touch</span>
+              <span className="text-cyan-400 text-sm font-semibold tracking-wide">{getContent('hero_badge', 'Get In Touch')}</span>
             </div>
 
             {/* Main Heading */}
             <h2 className="text-5xl md:text-6xl lg:text-7xl font-extrabold text-white leading-[1.1] tracking-tight">
-              Let's Build the
+              {getContent('hero_title_line1', "Let's Build the")}
               <span className="block mt-3 bg-gradient-to-r from-cyan-400 via-blue-500 to-cyan-400 bg-clip-text text-transparent">
-                Future Together
+                {getContent('hero_title_line2', 'Future Together')}
               </span>
             </h2>
 
             {/* Subtitle */}
             <p className="text-xl lg:text-2xl text-white/70 leading-relaxed max-w-3xl mx-auto font-medium">
-              Ready to transform your ideas into intelligent products? Connect with our team of experts and discover how Trinova AI can accelerate your innovation journey.
+              {getContent('hero_subtitle', 'Ready to transform your ideas into intelligent products? Connect with our team of experts and discover how Trinova AI can accelerate your innovation journey.')}
             </p>
           </div>
         </div>
@@ -68,18 +153,18 @@ export default function Contact() {
               <div className="space-y-6">
                 <div className="inline-flex items-center space-x-2 px-4 py-2 bg-cyan-500/10 border border-cyan-500/30 rounded-full">
                   <i className="ri-phone-line text-cyan-400"></i>
-                  <span className="text-cyan-400 text-sm font-semibold">Contact Information</span>
+                  <span className="text-cyan-400 text-sm font-semibold">{getContent('contact_info_badge', 'Contact Information')}</span>
                 </div>
 
                 <h2 className="text-4xl lg:text-5xl font-black text-white leading-tight">
-                  Connect with
+                  {getContent('contact_info_title_line1', 'Connect with')}
                   <span className="block bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent mt-1">
-                    Our Experts
+                    {getContent('contact_info_title_line2', 'Our Experts')}
                   </span>
                 </h2>
 
                 <p className="text-lg text-white/70 leading-relaxed">
-                  Our team is ready to discuss your project requirements and provide tailored solutions for your intelligent electronics needs.
+                  {getContent('contact_info_description', 'Our team is ready to discuss your project requirements and provide tailored solutions for your intelligent electronics needs.')}
                 </p>
               </div>
 
@@ -93,10 +178,10 @@ export default function Contact() {
                     </div>
                     <div>
                       <h3 className="text-white font-bold text-lg mb-2">Phone</h3>
-                      <a href="tel:+918310694003" className="text-white/70 hover:text-cyan-400 transition-colors duration-300 cursor-pointer text-lg">
-                        +91 83106 94003
+                      <a href={`tel:${getContent('phone_number', '+918310694003')}`} className="text-white/70 hover:text-cyan-400 transition-colors duration-300 cursor-pointer text-lg">
+                        {getContent('phone_number', '+91 83106 94003')}
                       </a>
-                      <p className="text-white/50 text-sm mt-1">Available Monday - Friday, 9 AM - 6 PM IST</p>
+                      <p className="text-white/50 text-sm mt-1">{getContent('phone_availability', 'Available Monday - Friday, 9 AM - 6 PM IST')}</p>
                     </div>
                   </div>
                 </div>
@@ -109,10 +194,10 @@ export default function Contact() {
                     </div>
                     <div>
                       <h3 className="text-white font-bold text-lg mb-2">Email</h3>
-                      <a href="mailto:technical@trinovaaitech.com" className="text-white/70 hover:text-cyan-400 transition-colors duration-300 cursor-pointer text-lg">
-                        technical@trinovaaitech.com
+                      <a href={`mailto:${getContent('email_address', 'technical@trinovaaitech.com')}`} className="text-white/70 hover:text-cyan-400 transition-colors duration-300 cursor-pointer text-lg">
+                        {getContent('email_address', 'technical@trinovaaitech.com')}
                       </a>
-                      <p className="text-white/50 text-sm mt-1">We respond within 24 hours</p>
+                      <p className="text-white/50 text-sm mt-1">{getContent('email_response_time', 'We respond within 24 hours')}</p>
                     </div>
                   </div>
                 </div>
@@ -126,11 +211,11 @@ export default function Contact() {
                     <div>
                       <h3 className="text-white font-bold text-lg mb-2">Office Address</h3>
                       <div className="text-white/70 leading-relaxed">
-                        No-1461, 2nd floor, 14th cross road,<br />
-                        Ananth Nagar phase2, Electronic City,<br />
-                        Bangalore - 560100, India
+                        {getContent('address_line1', 'No-1461, 2nd floor, 14th cross road,')}<br />
+                        {getContent('address_line2', 'Ananth Nagar phase2, Electronic City,')}<br />
+                        {getContent('address_line3', 'Bangalore - 560100, India')}
                       </div>
-                      <p className="text-white/50 text-sm mt-2">Visit us for in-person consultations</p>
+                      <p className="text-white/50 text-sm mt-2">{getContent('address_note', 'Visit us for in-person consultations')}</p>
                     </div>
                   </div>
                 </div>
@@ -140,13 +225,13 @@ export default function Contact() {
               <div className="pt-6">
                 <h3 className="text-white font-bold text-lg mb-4">Follow Us</h3>
                 <div className="flex items-center space-x-4">
-                  <a href="#" className="w-12 h-12 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 hover:border-cyan-400/50 rounded-lg flex items-center justify-center transition-all duration-300 cursor-pointer group">
+                  <a href={getContent('social_linkedin', '#')} target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 hover:border-cyan-400/50 rounded-lg flex items-center justify-center transition-all duration-300 cursor-pointer group">
                     <i className="ri-linkedin-fill text-cyan-400 group-hover:text-cyan-300 text-xl"></i>
                   </a>
-                  <a href="#" className="w-12 h-12 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 hover:border-cyan-400/50 rounded-lg flex items-center justify-center transition-all duration-300 cursor-pointer group">
+                  <a href={getContent('social_instagram', '#')} target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 hover:border-cyan-400/50 rounded-lg flex items-center justify-center transition-all duration-300 cursor-pointer group">
                     <i className="ri-instagram-line text-cyan-400 group-hover:text-cyan-300 text-xl"></i>
                   </a>
-                  <a href="#" className="w-12 h-12 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 hover:border-cyan-400/50 rounded-lg flex items-center justify-center transition-all duration-300 cursor-pointer group">
+                  <a href={getContent('social_facebook', '#')} target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 hover:border-cyan-400/50 rounded-lg flex items-center justify-center transition-all duration-300 cursor-pointer group">
                     <i className="ri-facebook-fill text-cyan-400 group-hover:text-cyan-300 text-xl"></i>
                   </a>
                 </div>
@@ -157,11 +242,30 @@ export default function Contact() {
             <div className="bg-[#1a1a2e]/50 backdrop-blur-md border border-cyan-500/20 rounded-2xl p-8">
               <div className="space-y-6">
                 <div className="space-y-2">
-                  <h3 className="text-white font-bold text-2xl">Start Your Project</h3>
-                  <p className="text-white/60">Tell us about your project and we'll get back to you within 24 hours.</p>
+                  <h3 className="text-white font-bold text-2xl">{getContent('form_title', 'Start Your Project')}</h3>
+                  <p className="text-white/60">{getContent('form_description', 'Tell us about your project and we\'ll get back to you within 24 hours.')}</p>
                 </div>
 
-                <form className="space-y-6" data-readdy-form id="contact-form">
+                {/* Submit Message */}
+                {submitMessage && (
+                  <div className={`p-4 rounded-lg ${
+                    submitMessage.type === 'success' 
+                      ? 'bg-green-500/10 border border-green-500/30 text-green-400' 
+                      : 'bg-red-500/10 border border-red-500/30 text-red-400'
+                  }`}>
+                    <div className="flex items-center space-x-2">
+                      <i className={`ri-${submitMessage.type === 'success' ? 'check' : 'error-warning'}-line`}></i>
+                      <span>{submitMessage.text}</span>
+                    </div>
+                  </div>
+                )}
+
+                {/* Contact Form */}
+                <form 
+                  className="space-y-6" 
+                  id="contact-form"
+                  onSubmit={handleFormSubmit}
+                >
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-white font-medium mb-2">First Name</label>
@@ -248,9 +352,17 @@ export default function Contact() {
 
                   <button 
                     type="submit"
-                    className="w-full px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold rounded-xl hover:shadow-2xl hover:shadow-cyan-500/50 hover:scale-105 transition-all duration-300 whitespace-nowrap cursor-pointer"
+                    disabled={submitting}
+                    className="w-full px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold rounded-xl hover:shadow-2xl hover:shadow-cyan-500/50 hover:scale-105 transition-all duration-300 whitespace-nowrap cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                   >
-                    Send Message
+                    {submitting ? (
+                      <>
+                        <i className="ri-loader-4-line animate-spin mr-2"></i>
+                        Sending...
+                      </>
+                    ) : (
+                      'Send Message'
+                    )}
                   </button>
                 </form>
               </div>
@@ -265,19 +377,19 @@ export default function Contact() {
           <div className="space-y-8">
             <div className="text-center space-y-4">
               <h2 className="text-3xl lg:text-4xl font-black text-white">
-                Visit Our
+                {getContent('map_title_line1', 'Visit Our')}
                 <span className="block bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent mt-1">
-                  Innovation Hub
+                  {getContent('map_title_line2', 'Innovation Hub')}
                 </span>
               </h2>
               <p className="text-lg text-white/70 max-w-2xl mx-auto">
-                Located in the heart of Bangalore's Electronic City, our state-of-the-art facility is equipped with cutting-edge technology and innovation labs.
+                {getContent('map_description', 'Located in the heart of Bangalore\'s Electronic City, our state-of-the-art facility is equipped with cutting-edge technology and innovation labs.')}
               </p>
             </div>
 
             <div className="relative h-96 rounded-2xl overflow-hidden border border-cyan-500/20">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3889.2!2d77.6648!3d12.8456!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTLCsDUwJzQ0LjIiTiA3N8KwMzknNTMuMyJF!5e0!3m2!1sen!2sin!4v1234567890"
+                src={getContent('map_embed_url', 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3889.2!2d77.6648!3d12.8456!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTLCsDUwJzQ0LjIiTiA3N8KwMzknNTMuMyJF!5e0!3m2!1sen!2sin!4v1234567890')}
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}

@@ -1,7 +1,45 @@
 import Header from "../../components/layout/Header";
 import Footer from "../../components/layout/Footer";
+import { useEffect, useState } from 'react';
+import { emsContentAPI } from '../../services/api';
 
 export default function EMS() {
+  const [content, setContent] = useState<any>({});
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchContent();
+  }, []);
+
+  const fetchContent = async () => {
+    try {
+      const response = await emsContentAPI.get();
+      setContent(response.data?.content || {});
+    } catch (error) {
+      console.error('Error fetching content:', error);
+      setContent({});
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Helper to get content with fallback
+  const getContent = (key: string, fallback: string = '') => {
+    return content[key]?.value || fallback;
+  };
+
+  const getImageUrl = (key: string, fallback: string = '') => {
+    return content[key]?.imageUrl || fallback;
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#252525] flex items-center justify-center">
+        <i className="ri-loader-4-line text-cyan-400 text-4xl animate-spin"></i>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#252525] font-['Manrope',sans-serif]">
       <Header active="ems" />
@@ -11,7 +49,7 @@ export default function EMS() {
         {/* Background Image with Overlay */}
         <div className="absolute inset-0">
           <img
-            src="https://readdy.ai/api/search-image?query=High-resolution%20complex%20HDI%20PCB%20circuit%20board%20with%20glowing%20electric%20blue%20and%20cyan%20traces%2C%20extreme%20macro%20photography%20showing%20precision%20manufacturing%20details%2C%20dark%20ambient%20background%20with%20sophisticated%20electronic%20components%2C%20photorealistic%20style%20with%20depth%20of%20field%2C%20advanced%20technology%20and%20precision%20engineering%20atmosphere%2C%20clean%20minimalist%20composition%20emphasizing%20quality%20and%20innovation&width=1920&height=900&seq=ems-hero-bg&orientation=landscape"
+            src={getImageUrl('hero_background_image', 'https://readdy.ai/api/search-image?query=High-resolution%20complex%20HDI%20PCB%20circuit%20board%20with%20glowing%20electric%20blue%20and%20cyan%20traces%2C%20extreme%20macro%20photography%20showing%20precision%20manufacturing%20details%2C%20dark%20ambient%20background%20with%20sophisticated%20electronic%20components%2C%20photorealistic%20style%20with%20depth%20of%20field%2C%20advanced%20technology%20and%20precision%20engineering%20atmosphere%2C%20clean%20minimalist%20composition%20emphasizing%20quality%20and%20innovation&width=1920&height=900&seq=ems-hero-bg&orientation=landscape')}
             alt="High-density interconnect PCB with glowing traces"
             className="w-full h-full object-cover object-center"
           />
@@ -34,23 +72,21 @@ export default function EMS() {
             <div className="inline-flex items-center space-x-2 px-5 py-2.5 bg-cyan-500/10 border border-cyan-500/30 rounded-full backdrop-blur-sm">
               <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></div>
               <span className="text-cyan-400 text-sm font-semibold tracking-wide">
-                Electronic Manufacturing Services
+                {getContent('hero_badge', 'Electronic Manufacturing Services')}
               </span>
             </div>
 
             {/* Main Heading */}
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold text-white leading-[1.1] tracking-tight">
-              Precision Manufacturing for{" "}
+              {getContent('hero_title_line1', 'Precision Manufacturing for')}{" "}
               <span className="bg-gradient-to-r from-cyan-400 via-blue-500 to-cyan-400 bg-clip-text text-transparent">
-                the AI Era
+                {getContent('hero_title_line2', 'the AI Era')}
               </span>
             </h1>
 
             {/* Subtitle */}
             <p className="text-xl lg:text-2xl text-white/70 leading-relaxed max-w-3xl font-medium">
-              Trinova AI provides end-to-end Electronic Manufacturing Services,
-              ensuring your intelligent products are built to perfection with
-              unparalleled quality and precision.
+              {getContent('hero_subtitle', 'Trinova AI provides end-to-end Electronic Manufacturing Services, ensuring your intelligent products are built to perfection with unparalleled quality and precision.')}
             </p>
 
             {/* CTA Buttons */}
@@ -86,20 +122,19 @@ export default function EMS() {
             <div className="inline-flex items-center space-x-2 px-4 py-2 bg-cyan-500/10 border border-cyan-500/30 rounded-full">
               <i className="ri-flow-chart text-cyan-400"></i>
               <span className="text-cyan-400 text-sm font-semibold">
-                Production Pipeline
+                {getContent('pipeline_badge', 'Production Pipeline')}
               </span>
             </div>
 
             <h2 className="text-4xl lg:text-5xl font-black text-white leading-tight">
-              Our Integrated
+              {getContent('pipeline_title_line1', 'Our Integrated')}
               <span className="block bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent mt-1">
-                PCB Production Pipeline
+                {getContent('pipeline_title_line2', 'PCB Production Pipeline')}
               </span>
             </h2>
 
             <p className="text-xl text-white/70 leading-relaxed max-w-3xl mx-auto">
-              From concept to completion, our comprehensive manufacturing
-              process ensures precision at every step
+              {getContent('pipeline_description', 'From concept to completion, our comprehensive manufacturing process ensures precision at every step')}
             </p>
           </div>
 
@@ -112,7 +147,7 @@ export default function EMS() {
                   <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/20 via-blue-600/20 to-purple-600/20 rounded-2xl blur-xl"></div>
                   <div className="relative h-full bg-gradient-to-br from-[#1a1a2e] to-[#0a0a0a] rounded-2xl border border-cyan-500/20 overflow-hidden">
                     <img
-                      src="https://readdy.ai/api/search-image?query=Stunning%203D%20render%20of%20complex%20multilayer%20PCB%20layout%20with%20glowing%20electric%20blue%20traces%20and%20pathways%2C%20sophisticated%20circuit%20design%20visualization%20on%20dark%20background%2C%20high-tech%20CAD%20software%20interface%2C%20extreme%20detail%20showing%20precision%20routing%20and%20component%20placement%2C%20photorealistic%20style%20with%20dramatic%20lighting%2C%20advanced%20electronic%20design%20automation%20atmosphere&width=600&height=500&seq=pcb-layout-design&orientation=landscape"
+                      src={getImageUrl('step_1_image', 'https://readdy.ai/api/search-image?query=Stunning%203D%20render%20of%20complex%20multilayer%20PCB%20layout%20with%20glowing%20electric%20blue%20traces%20and%20pathways%2C%20sophisticated%20circuit%20design%20visualization%20on%20dark%20background%2C%20high-tech%20CAD%20software%20interface%2C%20extreme%20detail%20showing%20precision%20routing%20and%20component%20placement%2C%20photorealistic%20style%20with%20dramatic%20lighting%2C%20advanced%20electronic%20design%20automation%20atmosphere&width=600&height=500&seq=pcb-layout-design&orientation=landscape')}
                       alt="3D PCB layout with glowing electric blue traces"
                       className="w-full h-full object-cover object-center opacity-90"
                     />
@@ -125,20 +160,19 @@ export default function EMS() {
                 <div className="inline-flex items-center space-x-2 px-4 py-2 bg-cyan-500/10 border border-cyan-500/30 rounded-full">
                   <i className="ri-compasses-2-line text-cyan-400"></i>
                   <span className="text-cyan-400 text-sm font-semibold">
-                    Step 1
+                    {getContent('step_1_badge', 'Step 1')}
                   </span>
                 </div>
 
                 <h3 className="text-3xl lg:text-4xl font-black text-white leading-tight">
-                  PCB Design &
+                  {getContent('step_1_title_line1', 'PCB Design &')}
                   <span className="block bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
-                    Layout
+                    {getContent('step_1_title_line2', 'Layout')}
                   </span>
                 </h3>
 
                 <p className="text-lg text-white/70 leading-relaxed">
-                  <strong>Focus:</strong> Optimized, high-performance layouts
-                  focusing on manufacturability (DFM) and functionality.
+                  <strong>Focus:</strong> {getContent('step_1_focus', 'Optimized, high-performance layouts focusing on manufacturability (DFM) and functionality.')}
                 </p>
 
                 <div className="space-y-4">
@@ -152,7 +186,7 @@ export default function EMS() {
                           <i className="ri-settings-line text-cyan-400 text-sm"></i>
                         </div>
                         <span className="text-white/80 text-sm">
-                          Custom Layouts tailored to product specifications
+                          {getContent('step_1_service_1', 'Custom Layouts tailored to product specifications')}
                         </span>
                       </div>
                       <div className="flex items-center space-x-3">
@@ -160,8 +194,7 @@ export default function EMS() {
                           <i className="ri-stack-line text-blue-400 text-sm"></i>
                         </div>
                         <span className="text-white/80 text-sm">
-                          Complex Designs: High-density interconnects (HDI) and
-                          multi-layer designs
+                          {getContent('step_1_service_2', 'Complex Designs: High-density interconnects (HDI) and multi-layer designs')}
                         </span>
                       </div>
                     </div>
@@ -176,21 +209,19 @@ export default function EMS() {
                 <div className="inline-flex items-center space-x-2 px-4 py-2 bg-blue-500/10 border border-blue-500/30 rounded-full">
                   <i className="ri-hammer-line text-blue-400"></i>
                   <span className="text-blue-400 text-sm font-semibold">
-                    Step 2
+                    {getContent('step_2_badge', 'Step 2')}
                   </span>
                 </div>
 
                 <h3 className="text-3xl lg:text-4xl font-black text-white leading-tight">
-                  PCB
+                  {getContent('step_2_title_line1', 'PCB')}
                   <span className="block bg-gradient-to-r from-blue-400 to-cyan-500 bg-clip-text text-transparent">
-                    Fabrication
+                    {getContent('step_2_title_line2', 'Fabrication')}
                   </span>
                 </h3>
 
                 <p className="text-lg text-white/70 leading-relaxed">
-                  <strong>Focus:</strong> Complete fabrication services from
-                  single-sided to complex multi-layer boards, ensuring high
-                  durability and precise electrical performance.
+                  <strong>Focus:</strong> {getContent('step_2_focus', 'Complete fabrication services from single-sided to complex multi-layer boards, ensuring high durability and precise electrical performance.')}
                 </p>
 
                 <div className="space-y-4">
@@ -204,7 +235,7 @@ export default function EMS() {
                           <i className="ri-circuit-line text-blue-400 text-sm"></i>
                         </div>
                         <span className="text-white/80 text-sm">
-                          Single-Sided & Double-Sided PCBs
+                          {getContent('step_2_service_1', 'Single-Sided & Double-Sided PCBs')}
                         </span>
                       </div>
                       <div className="flex items-center space-x-3">
@@ -212,7 +243,7 @@ export default function EMS() {
                           <i className="ri-stack-line text-cyan-400 text-sm"></i>
                         </div>
                         <span className="text-white/80 text-sm">
-                          Multi-Layer PCBs for complex electronics
+                          {getContent('step_2_service_2', 'Multi-Layer PCBs for complex electronics')}
                         </span>
                       </div>
                       <div className="flex items-center space-x-3">
@@ -220,7 +251,7 @@ export default function EMS() {
                           <i className="ri-flex-line text-blue-400 text-sm"></i>
                         </div>
                         <span className="text-white/80 text-sm">
-                          Rigid & Flexible PCBs for versatile product designs
+                          {getContent('step_2_service_3', 'Rigid & Flexible PCBs for versatile product designs')}
                         </span>
                       </div>
                     </div>
@@ -233,7 +264,7 @@ export default function EMS() {
                   <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-cyan-600/20 to-purple-600/20 rounded-2xl blur-xl"></div>
                   <div className="relative h-full bg-gradient-to-br from-[#1a1a2e] to-[#0a0a0a] rounded-2xl border border-blue-500/20 overflow-hidden">
                     <img
-                      src="https://readdy.ai/api/search-image?query=Professional%20macro%20photography%20of%20various%20PCB%20types%20including%20rigid%20flex%20and%20multi-layer%20stackup%20visualization%2C%20clean%20organized%20display%20showing%20different%20circuit%20board%20technologies%2C%20dark%20background%20with%20blue%20cyan%20accent%20lighting%2C%20photorealistic%20style%20with%20extreme%20detail%2C%20precision%20manufacturing%20and%20quality%20control%20atmosphere&width=600&height=500&seq=pcb-fabrication&orientation=landscape"
+                      src={getImageUrl('step_2_image', 'https://readdy.ai/api/search-image?query=Professional%20macro%20photography%20of%20various%20PCB%20types%20including%20rigid%20flex%20and%20multi-layer%20stackup%20visualization%2C%20clean%20organized%20display%20showing%20different%20circuit%20board%20technologies%2C%20dark%20background%20with%20blue%20cyan%20accent%20lighting%2C%20photorealistic%20style%20with%20extreme%20detail%2C%20precision%20manufacturing%20and%20quality%20control%20atmosphere&width=600&height=500&seq=pcb-fabrication&orientation=landscape')}
                       alt="Various PCB types and multi-layer stackup"
                       className="w-full h-full object-cover object-center opacity-90"
                     />
@@ -250,7 +281,7 @@ export default function EMS() {
                   <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-cyan-600/20 to-purple-600/20 rounded-2xl blur-xl"></div>
                   <div className="relative h-full bg-gradient-to-br from-[#1a1a2e] to-[#0a0a0a] rounded-2xl border border-blue-500/20 overflow-hidden">
                     <img
-                      src="https://readdy.ai/api/search-image?query=Extreme%20macro%20photography%20of%20precision%20laser-cut%20solder%20stencil%20pattern%20over%20PCB%20pad%20array%2C%20sophisticated%20stencil%20manufacturing%20process%20with%20fine%20pitch%20details%2C%20dark%20background%20with%20cyan%20blue%20accent%20lighting%2C%20photorealistic%20style%20with%20shallow%20depth%20of%20field%2C%20precision%20manufacturing%20and%20quality%20control%20atmosphere&width=600&height=500&seq=pcb-stencil&orientation=landscape"
+                      src={getImageUrl('step_3_image', 'https://readdy.ai/api/search-image?query=Extreme%20macro%20photography%20of%20precision%20laser-cut%20solder%20stencil%20pattern%20over%20PCB%20pad%20array%2C%20sophisticated%20stencil%20manufacturing%20process%20with%20fine%20pitch%20details%2C%20dark%20background%20with%20cyan%20blue%20accent%20lighting%2C%20photorealistic%20style%20with%20shallow%20depth%20of%20field%2C%20precision%20manufacturing%20and%20quality%20control%20atmosphere&width=600&height=500&seq=pcb-stencil&orientation=landscape')}
                       alt="Precision solder stencil over PCB pad array"
                       className="w-full h-full object-cover object-center opacity-90"
                     />
@@ -262,20 +293,19 @@ export default function EMS() {
                 <div className="inline-flex items-center space-x-2 px-4 py-2 bg-blue-500/10 border border-blue-500/30 rounded-full">
                   <i className="ri-artboard-line text-blue-400"></i>
                   <span className="text-blue-400 text-sm font-semibold">
-                    Step 3
+                    {getContent('step_3_badge', 'Step 3')}
                   </span>
                 </div>
 
                 <h3 className="text-3xl lg:text-4xl font-black text-white leading-tight">
-                  PCB
+                  {getContent('step_3_title_line1', 'PCB')}
                   <span className="block bg-gradient-to-r from-blue-400 to-cyan-500 bg-clip-text text-transparent">
-                    Stencil
+                    {getContent('step_3_title_line2', 'Stencil')}
                   </span>
                 </h3>
 
                 <p className="text-lg text-white/70 leading-relaxed">
-                  <strong>Focus:</strong> Custom, precision-cut PCB stencils for
-                  accurate solder paste application during assembly.
+                  <strong>Focus:</strong> {getContent('step_3_focus', 'Custom, precision-cut PCB stencils for accurate solder paste application during assembly.')}
                 </p>
 
                 <div className="space-y-4">
@@ -289,7 +319,7 @@ export default function EMS() {
                           <i className="ri-focus-3-line text-blue-400 text-sm"></i>
                         </div>
                         <span className="text-white/80 text-sm">
-                          Laser-Cut Stencils for precise paste deposition
+                          {getContent('step_3_service_1', 'Laser-Cut Stencils for precise paste deposition')}
                         </span>
                       </div>
                       <div className="flex items-center space-x-3">
@@ -297,7 +327,7 @@ export default function EMS() {
                           <i className="ri-recycle-line text-cyan-400 text-sm"></i>
                         </div>
                         <span className="text-white/80 text-sm">
-                          Reusable Stencils to reduce costs
+                          {getContent('step_3_service_2', 'Reusable Stencils to reduce costs')}
                         </span>
                       </div>
                       <div className="flex items-center space-x-3">
@@ -305,8 +335,7 @@ export default function EMS() {
                           <i className="ri-grid-line text-blue-400 text-sm"></i>
                         </div>
                         <span className="text-white/80 text-sm">
-                          Fine Pitch Stencils for high-density boards with small
-                          components
+                          {getContent('step_3_service_3', 'Fine Pitch Stencils for high-density boards with small components')}
                         </span>
                       </div>
                     </div>
@@ -317,27 +346,23 @@ export default function EMS() {
 
             {/* Service 4: PCB Assembly - Text Left */}
             <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-              
-
               <div className="space-y-6">
                 <div className="inline-flex items-center space-x-2 px-4 py-2 bg-cyan-500/10 border border-cyan-500/30 rounded-full">
                   <i className="ri-tools-line text-cyan-400"></i>
                   <span className="text-cyan-400 text-sm font-semibold">
-                    Step 4
+                    {getContent('step_4_badge', 'Step 4')}
                   </span>
                 </div>
 
                 <h3 className="text-3xl lg:text-4xl font-black text-white leading-tight">
-                  PCB
+                  {getContent('step_4_title_line1', 'PCB')}
                   <span className="block bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
-                    Assembly
+                    {getContent('step_4_title_line2', 'Assembly')}
                   </span>
                 </h3>
 
                 <p className="text-lg text-white/70 leading-relaxed">
-                  <strong>Focus:</strong> Covers low-volume and high-volume
-                  production runs. Handling Surface Mount Technology (SMT),
-                  Through-Hole Technology (THT), and Mixed Technology Assembly.
+                  <strong>Focus:</strong> {getContent('step_4_focus', 'Covers low-volume and high-volume production runs. Handling Surface Mount Technology (SMT), Through-Hole Technology (THT), and Mixed Technology Assembly.')}
                 </p>
 
                 <div className="space-y-4">
@@ -351,7 +376,7 @@ export default function EMS() {
                           <i className="ri-cpu-line text-cyan-400 text-sm"></i>
                         </div>
                         <span className="text-white/80 text-sm">
-                          SMT & THT Assembly for small and large components
+                          {getContent('step_4_service_1', 'SMT & THT Assembly for small and large components')}
                         </span>
                       </div>
                       <div className="flex items-center space-x-3">
@@ -359,7 +384,7 @@ export default function EMS() {
                           <i className="ri-robot-line text-blue-400 text-sm"></i>
                         </div>
                         <span className="text-white/80 text-sm">
-                          Automated and Manual Assembly to ensure precision
+                          {getContent('step_4_service_2', 'Automated and Manual Assembly to ensure precision')}
                         </span>
                       </div>
                       <div className="flex items-center space-x-3">
@@ -367,8 +392,7 @@ export default function EMS() {
                           <i className="ri-shield-check-line text-cyan-400 text-sm"></i>
                         </div>
                         <span className="text-white/80 text-sm">
-                          Testing & Quality Assurance throughout the assembly
-                          process
+                          {getContent('step_4_service_3', 'Testing & Quality Assurance throughout the assembly process')}
                         </span>
                       </div>
                     </div>
@@ -380,7 +404,7 @@ export default function EMS() {
                   <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/20 via-blue-600/20 to-purple-600/20 rounded-2xl blur-xl"></div>
                   <div className="relative h-full bg-gradient-to-br from-[#1a1a2e] to-[#0a0a0a] rounded-2xl border border-cyan-500/20 overflow-hidden">
                     <img
-                      src="https://readdy.ai/api/search-image?query=Modern%20SMT%20robotic%20arm%20precisely%20placing%20microchip%20component%20on%20PCB%20circuit%20board%2C%20high-tech%20automated%20assembly%20line%20with%20blue%20LED%20lighting%2C%20sophisticated%20manufacturing%20equipment%20in%20clean%20factory%20environment%2C%20photorealistic%20style%20with%20dramatic%20lighting%2C%20precision%20automation%20and%20quality%20manufacturing%20atmosphere&width=600&height=500&seq=pcb-assembly&orientation=landscape"
+                      src={getImageUrl('step_4_image', 'https://readdy.ai/api/search-image?query=Modern%20SMT%20robotic%20arm%20precisely%20placing%20microchip%20component%20on%20PCB%20circuit%20board%2C%20high-tech%20automated%20assembly%20line%20with%20blue%20LED%20lighting%2C%20sophisticated%20manufacturing%20equipment%20in%20clean%20factory%20environment%2C%20photorealistic%20style%20with%20dramatic%20lighting%2C%20precision%20automation%20and%20quality%20manufacturing%20atmosphere&width=600&height=500&seq=pcb-assembly&orientation=landscape')}
                       alt="SMT robotic arm placing microchip with precision"
                       className="w-full h-full object-cover object-center opacity-90"
                     />
@@ -397,7 +421,7 @@ export default function EMS() {
                   <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-cyan-600/20 to-purple-600/20 rounded-2xl blur-xl"></div>
                   <div className="relative h-full bg-gradient-to-br from-[#1a1a2e] to-[#0a0a0a] rounded-2xl border border-blue-500/20 overflow-hidden">
                     <img
-                      src='/images/board-bring-up-hardware-testing.jpg'
+                      src={getImageUrl('step_5_image', '/images/board-bring-up-hardware-testing.jpg')}
                       alt="Engineer testing PCB with oscilloscope and multimeter"
                       className="w-full h-full object-cover object-center opacity-90"
                     />
@@ -410,24 +434,19 @@ export default function EMS() {
                 <div className="inline-flex items-center space-x-2 px-4 py-2 bg-blue-500/10 border border-blue-500/30 rounded-full">
                   <i className="ri-test-tube-line text-blue-400"></i>
                   <span className="text-blue-400 text-sm font-semibold">
-                    Step 5
+                    {getContent('step_5_badge', 'Step 5')}
                   </span>
                 </div>
 
                 <h3 className="text-3xl lg:text-4xl font-black text-white leading-tight">
-                  Board Bring-Up &
+                  {getContent('step_5_title_line1', 'Board Bring-Up &')}
                   <span className="block bg-gradient-to-r from-blue-400 to-cyan-500 bg-clip-text text-transparent">
-                    Hardware Testing
+                    {getContent('step_5_title_line2', 'Hardware Testing')}
                   </span>
                 </h3>
 
                 <p className="text-lg text-white/70 leading-relaxed">
-                  <strong>Focus:</strong> We provide comprehensive Board Bring-Up
-                  and Hardware Testing services to ensure your electronic designs
-                  move seamlessly from prototype to production. Our experienced
-                  engineering team thoroughly validates every aspect of your PCB,
-                  guaranteeing optimal performance, high reliability, and full
-                  compliance with your product requirements.
+                  <strong>Focus:</strong> {getContent('step_5_focus', 'We provide comprehensive Board Bring-Up and Hardware Testing services to ensure your electronic designs move seamlessly from prototype to production. Our experienced engineering team thoroughly validates every aspect of your PCB, guaranteeing optimal performance, high reliability, and full compliance with your product requirements.')}
                 </p>
 
                 <div className="space-y-4">
@@ -441,7 +460,7 @@ export default function EMS() {
                           <i className="ri-flashlight-line text-blue-400 text-sm"></i>
                         </div>
                         <span className="text-white/80 text-sm">
-                          Initial Power-On and Basic Functionality Testing
+                          {getContent('step_5_service_1', 'Initial Power-On and Basic Functionality Testing')}
                         </span>
                       </div>
                       <div className="flex items-center space-x-3">
@@ -449,7 +468,7 @@ export default function EMS() {
                           <i className="ri-radar-line text-cyan-400 text-sm"></i>
                         </div>
                         <span className="text-white/80 text-sm">
-                          Signal Integrity and Power Integrity Analysis
+                          {getContent('step_5_service_2', 'Signal Integrity and Power Integrity Analysis')}
                         </span>
                       </div>
                       <div className="flex items-center space-x-3">
@@ -457,7 +476,7 @@ export default function EMS() {
                           <i className="ri-settings-3-line text-blue-400 text-sm"></i>
                         </div>
                         <span className="text-white/80 text-sm">
-                          Firmware Integration and System Validation
+                          {getContent('step_5_service_3', 'Firmware Integration and System Validation')}
                         </span>
                       </div>
                       <div className="flex items-center space-x-3">
@@ -465,7 +484,7 @@ export default function EMS() {
                           <i className="ri-file-list-3-line text-cyan-400 text-sm"></i>
                         </div>
                         <span className="text-white/80 text-sm">
-                          Comprehensive Test Reports and Documentation
+                          {getContent('step_5_service_4', 'Comprehensive Test Reports and Documentation')}
                         </span>
                       </div>
                     </div>
@@ -491,14 +510,14 @@ export default function EMS() {
             <div className="inline-flex items-center space-x-2 px-4 py-2 bg-cyan-500/10 border border-cyan-500/30 rounded-full">
               <i className="ri-heart-line text-cyan-400"></i>
               <span className="text-cyan-400 text-sm font-semibold">
-                Foundation
+                {getContent('commitment_badge', 'Foundation')}
               </span>
             </div>
 
             <h2 className="text-4xl lg:text-5xl font-black text-white leading-tight">
-              Our Commitment &
+              {getContent('commitment_title_line1', 'Our Commitment &')}
               <span className="block bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent mt-1">
-                Foundation
+                {getContent('commitment_title_line2', 'Foundation')}
               </span>
             </h2>
           </div>
@@ -509,12 +528,10 @@ export default function EMS() {
               <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-blue-600/5 rounded-2xl"></div>
               <div className="relative text-center space-y-6">
                 <h3 className="text-2xl lg:text-3xl font-black text-white">
-                  Our Mission
+                  {getContent('commitment_mission_title', 'Our Mission')}
                 </h3>
                 <p className="text-lg lg:text-xl text-white/80 leading-relaxed">
-                  To offer industry-leading PCB design, fabrication, and
-                  assembly services, ensuring the highest standards of
-                  performance and quality in every intelligent product.
+                  {getContent('commitment_mission_text', 'To offer industry-leading PCB design, fabrication, and assembly services, ensuring the highest standards of performance and quality in every intelligent product.')}
                 </p>
               </div>
             </div>
@@ -524,11 +541,10 @@ export default function EMS() {
           <div className="space-y-8">
             <div className="text-center">
               <h3 className="text-2xl lg:text-3xl font-black text-white mb-4">
-                Core Values
+                {getContent('commitment_values_title', 'Core Values')}
               </h3>
               <p className="text-lg text-white/70 max-w-2xl mx-auto">
-                The principles that guide our commitment to excellence in every
-                project
+                {getContent('commitment_values_description', 'The principles that guide our commitment to excellence in every project')}
               </p>
             </div>
 
@@ -540,9 +556,9 @@ export default function EMS() {
                   <div className="w-16 h-16 bg-cyan-500/10 rounded-full flex items-center justify-center mx-auto group-hover:bg-cyan-500/20 transition-colors duration-300">
                     <i className="ri-focus-3-line text-cyan-400 text-2xl"></i>
                   </div>
-                  <h4 className="text-white font-bold text-lg">Precision</h4>
+                  <h4 className="text-white font-bold text-lg">{getContent('value_precision_title', 'Precision')}</h4>
                   <p className="text-white/60 text-sm leading-relaxed">
-                    Focused on delivering flawless designs and manufacturing.
+                    {getContent('value_precision_text', 'Focused on delivering flawless designs and manufacturing.')}
                   </p>
                 </div>
               </div>
@@ -554,10 +570,9 @@ export default function EMS() {
                   <div className="w-16 h-16 bg-blue-500/10 rounded-full flex items-center justify-center mx-auto group-hover:bg-blue-500/20 transition-colors duration-300">
                     <i className="ri-award-line text-blue-400 text-2xl"></i>
                   </div>
-                  <h4 className="text-white font-bold text-lg">Quality</h4>
+                  <h4 className="text-white font-bold text-lg">{getContent('value_quality_title', 'Quality')}</h4>
                   <p className="text-white/60 text-sm leading-relaxed">
-                    Committed to top-tier product standards through rigorous
-                    testing and inspection.
+                    {getContent('value_quality_text', 'Committed to top-tier product standards through rigorous testing and inspection.')}
                   </p>
                 </div>
               </div>
@@ -569,9 +584,9 @@ export default function EMS() {
                   <div className="w-16 h-16 bg-cyan-500/10 rounded-full flex items-center justify-center mx-auto group-hover:bg-cyan-500/20 transition-colors duration-300">
                     <i className="ri-shield-check-line text-cyan-400 text-2xl"></i>
                   </div>
-                  <h4 className="text-white font-bold text-lg">Reliability</h4>
+                  <h4 className="text-white font-bold text-lg">{getContent('value_reliability_title', 'Reliability')}</h4>
                   <p className="text-white/60 text-sm leading-relaxed">
-                    Ensuring timely delivery and consistent product performance.
+                    {getContent('value_reliability_text', 'Ensuring timely delivery and consistent product performance.')}
                   </p>
                 </div>
               </div>
@@ -584,10 +599,10 @@ export default function EMS() {
                     <i className="ri-customer-service-line text-blue-400 text-2xl"></i>
                   </div>
                   <h4 className="text-white font-bold text-lg">
-                    Customer-Centric
+                    {getContent('value_customer_title', 'Customer-Centric')}
                   </h4>
                   <p className="text-white/60 text-sm leading-relaxed">
-                    Offering tailored solutions for every unique project.
+                    {getContent('value_customer_text', 'Offering tailored solutions for every unique project.')}
                   </p>
                 </div>
               </div>
@@ -610,22 +625,19 @@ export default function EMS() {
             <div className="inline-flex items-center space-x-2 px-4 py-2 bg-cyan-500/10 border border-cyan-500/30 rounded-full">
               <i className="ri-shield-check-line text-cyan-400"></i>
               <span className="text-cyan-400 text-sm font-semibold">
-                Quality Assurance
+                {getContent('quality_badge', 'Quality Assurance')}
               </span>
             </div>
 
             <h2 className="text-4xl lg:text-5xl font-black text-white leading-tight">
-              Rigorous Quality Control
+              {getContent('quality_title_line1', 'Rigorous Quality Control')}
               <span className="block bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent mt-1">
-                Processes
+                {getContent('quality_title_line2', 'Processes')}
               </span>
             </h2>
 
             <p className="text-xl text-white/70 leading-relaxed max-w-4xl mx-auto">
-              We are dedicated to ensuring that every PCB we manufacture meets
-              the highest standards of quality. From design and fabrication to
-              assembly and inspection, we maintain rigorous quality control
-              measures to guarantee your products perform flawlessly.
+              {getContent('quality_description', 'We are dedicated to ensuring that every PCB we manufacture meets the highest standards of quality. From design and fabrication to assembly and inspection, we maintain rigorous quality control measures to guarantee your products perform flawlessly.')}
             </p>
           </div>
 
@@ -639,10 +651,10 @@ export default function EMS() {
                   <i className="ri-search-line text-cyan-400 text-2xl"></i>
                 </div>
                 <h3 className="text-white font-bold text-lg">
-                  Material Inspection
+                  {getContent('quality_process_1_title', 'Material Inspection')}
                 </h3>
                 <p className="text-white/60 text-sm leading-relaxed">
-                  Ensuring all raw materials meet required standards.
+                  {getContent('quality_process_1_text', 'Ensuring all raw materials meet required standards.')}
                 </p>
               </div>
             </div>
@@ -655,11 +667,10 @@ export default function EMS() {
                   <i className="ri-test-tube-line text-blue-400 text-2xl"></i>
                 </div>
                 <h3 className="text-white font-bold text-lg">
-                  Functional Testing
+                  {getContent('quality_process_2_title', 'Functional Testing')}
                 </h3>
                 <p className="text-white/60 text-sm leading-relaxed">
-                  Verifying the functionality of every board during and after
-                  assembly.
+                  {getContent('quality_process_2_text', 'Verifying the functionality of every board during and after assembly.')}
                 </p>
               </div>
             </div>
@@ -672,10 +683,10 @@ export default function EMS() {
                   <i className="ri-eye-line text-cyan-400 text-2xl"></i>
                 </div>
                 <h3 className="text-white font-bold text-lg">
-                  Automated Optical Inspection (AOI)
+                  {getContent('quality_process_3_title', 'Automated Optical Inspection (AOI)')}
                 </h3>
                 <p className="text-white/60 text-sm leading-relaxed">
-                  Detecting any defects in PCB assembly to ensure quality.
+                  {getContent('quality_process_3_text', 'Detecting any defects in PCB assembly to ensure quality.')}
                 </p>
               </div>
             </div>
@@ -688,10 +699,10 @@ export default function EMS() {
                   <i className="ri-checkbox-circle-line text-blue-400 text-2xl"></i>
                 </div>
                 <h3 className="text-white font-bold text-lg">
-                  Final Inspection
+                  {getContent('quality_process_4_title', 'Final Inspection')}
                 </h3>
                 <p className="text-white/60 text-sm leading-relaxed">
-                  Detecting any defects in PCB assembly to ensure final quality.
+                  {getContent('quality_process_4_text', 'Detecting any defects in PCB assembly to ensure final quality.')}
                 </p>
               </div>
             </div>
@@ -708,22 +719,22 @@ export default function EMS() {
             <div className="inline-flex items-center space-x-2 px-5 py-2.5 bg-cyan-500/10 border border-cyan-500/30 rounded-full backdrop-blur-sm">
               <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></div>
               <span className="text-cyan-400 text-sm font-semibold tracking-wide">
-                Ready to Manufacture?
+                {getContent('cta_badge', 'Ready to Manufacture?')}
               </span>
             </div>
 
             <h2 className="text-4xl lg:text-5xl font-black text-white leading-tight">
-              Let's Build Your
+              {getContent('cta_title_line1', "Let's Build Your")}
               <span className="block bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent mt-1">
-                Next Innovation
+                {getContent('cta_title_line2', 'Next Innovation')}
               </span>
             </h2>
 
             <p className="text-xl text-white/70 leading-relaxed max-w-3xl mx-auto">
-              Partner with Trinova AI for precision electronic manufacturing
-              that brings your intelligent products to market
+              {getContent('cta_description', 'Partner with Trinova AI for precision electronic manufacturing that brings your intelligent products to market')}
             </p>
 
+            {/* CTA Buttons - Not editable */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
               <button className="px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold rounded-xl hover:shadow-2xl hover:shadow-cyan-500/50 hover:scale-105 transition-all duration-300 whitespace-nowrap cursor-pointer group">
                 <span className="flex items-center justify-center space-x-2">

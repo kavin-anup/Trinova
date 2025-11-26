@@ -78,5 +78,10 @@ export default defineConfig({
   server: {
     port: 3000,
     host: '0.0.0.0',
+    strictPort: false, // Allow automatic port selection if 3000 is in use
+  },
+  preview: {
+    port: 3000,
+    strictPort: false,
   }
 })
