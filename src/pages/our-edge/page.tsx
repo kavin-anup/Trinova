@@ -80,9 +80,9 @@ export default function OurEdge() {
             <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
               <defs>
                 <pattern id="edge-pattern" width="100" height="100" patternUnits="userSpaceOnUse">
-                  <path d="M 0 50 L 50 0 L 100 50 L 50 100 Z" fill="none" stroke="currentColor" strokeWidth="1" className="text-cyan-400"/>
+                  <path d="M 0 50 L 50 0 L 100 50 L 50 100 Z" fill="none" stroke="currentColor" strokeWidth="1" className="text-cyan-400" />
                   <circle cx="50" cy="50" r="3" fill="currentColor" className="text-cyan-400">
-                    <animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite"/>
+                    <animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite" />
                   </circle>
                 </pattern>
               </defs>
@@ -93,7 +93,7 @@ export default function OurEdge() {
           {/* Gradient Orbs */}
           <div className="absolute top-1/4 -left-48 w-96 h-96 bg-cyan-500/20 rounded-full blur-[120px] animate-pulse"></div>
           <div className="absolute bottom-1/4 -right-48 w-[500px] h-[500px] bg-blue-600/20 rounded-full blur-[140px] animate-pulse" style={{ animationDelay: '2s' }}></div>
-          
+
           {/* Sharp Glowing Lines */}
           <div className="absolute top-1/3 left-1/4 w-32 h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-60 transform rotate-45 animate-pulse"></div>
           <div className="absolute bottom-1/3 right-1/4 w-24 h-1 bg-gradient-to-r from-transparent via-blue-400 to-transparent opacity-40 transform -rotate-45 animate-pulse" style={{ animationDelay: '1s' }}></div>
@@ -101,7 +101,7 @@ export default function OurEdge() {
 
         {/* Hero Background Image */}
         <div className="absolute inset-0 opacity-20">
-          <img 
+          <img
             src={getImageUrl('hero_background_image', 'https://readdy.ai/api/search-image?query=Abstract%20conceptual%20visualization%20of%20competitive%20advantage%20and%20technological%20edge%2C%20sharp%20glowing%20blue%20line%20cutting%20through%20complex%20digital%20terrain%20with%20geometric%20patterns%2C%20dark%20cyberpunk%20aesthetic%20with%20electric%20cyan%20light%20traces%2C%20futuristic%203D%20render%20showing%20convergence%20of%20multiple%20technical%20disciplines%2C%20dramatic%20lighting%20with%20sharp%20angular%20elements%2C%20photorealistic%20composition%20representing%20innovation%20and%20market%20leadership&width=1920&height=1080&seq=edge-competitive-advantage&orientation=landscape')}
             alt="Competitive Edge Visualization"
             className="w-full h-full object-cover object-center"
@@ -301,12 +301,12 @@ export default function OurEdge() {
           {/* Process Flow */}
           <div className="relative">
             {/* Desktop Flow */}
-            <div className="hidden lg:flex items-center justify-between space-x-4">
+            <div className="hidden lg:flex items-stretch justify-between space-x-4">
               {processCards.length > 0 ? (
                 processCards.map((card, index) => (
-                  <div key={card.id || index} className="flex items-center">
-                    <div className="flex-1 group">
-                      <div className="relative bg-[#1a1a2e]/50 backdrop-blur-md border border-cyan-500/20 rounded-xl p-6 hover:border-cyan-400/50 hover:bg-[#1a1a2e]/80 transition-all duration-300">
+                  <div key={card.id || index} className="flex flex-col flex-1 min-w-0">
+                    <div className="flex-1 group h-full">
+                      <div className="relative bg-[#1a1a2e]/50 backdrop-blur-md border border-cyan-500/20 rounded-xl p-6 hover:border-cyan-400/50 hover:bg-[#1a1a2e]/80 transition-all duration-300 h-full flex flex-col">
                         <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-blue-600/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                         <div className="relative text-center space-y-4">
                           <div className={`w-16 h-16 ${index % 2 === 0 ? 'bg-cyan-500/10 group-hover:bg-cyan-500/20' : 'bg-blue-500/10 group-hover:bg-blue-500/20'} rounded-xl flex items-center justify-center mx-auto transition-colors duration-300`}>
@@ -316,14 +316,14 @@ export default function OurEdge() {
                             <span className="text-white font-bold text-sm">{card.order}</span>
                           </div>
                           <h3 className="text-white font-black text-lg">{card.title}</h3>
-                          <p className="text-white/60 text-sm leading-relaxed">
+                          <p className="text-white/60 text-sm leading-relaxed flex-1">
                             {card.description}
                           </p>
                         </div>
                       </div>
                     </div>
                     {index < processCards.length - 1 && (
-                      <div className="flex items-center justify-center mx-2">
+                      <div className="lg:hidden flex items-center justify-center mx-2 h-full shrink-0">
                         <div className="w-8 h-1 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full"></div>
                         <i className="ri-arrow-right-line text-cyan-400 text-xl ml-2"></i>
                       </div>
@@ -333,8 +333,8 @@ export default function OurEdge() {
               ) : (
                 // Fallback if no process cards
                 <>
-                  <div className="flex-1 group">
-                    <div className="relative bg-[#1a1a2e]/50 backdrop-blur-md border border-cyan-500/20 rounded-xl p-6 hover:border-cyan-400/50 hover:bg-[#1a1a2e]/80 transition-all duration-300">
+                  <div className="flex-1 group h-full min-w-0">
+                    <div className="relative bg-[#1a1a2e]/50 backdrop-blur-md border border-cyan-500/20 rounded-xl p-6 hover:border-cyan-400/50 hover:bg-[#1a1a2e]/80 transition-all duration-300 h-full flex flex-col">
                       <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-blue-600/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                       <div className="relative text-center space-y-4">
                         <div className="w-16 h-16 bg-cyan-500/10 rounded-xl flex items-center justify-center mx-auto group-hover:bg-cyan-500/20 transition-colors duration-300">
@@ -344,18 +344,18 @@ export default function OurEdge() {
                           <span className="text-white font-bold text-sm">1</span>
                         </div>
                         <h3 className="text-white font-black text-lg">Ideation</h3>
-                        <p className="text-white/60 text-sm leading-relaxed">
+                        <p className="text-white/60 text-sm leading-relaxed flex-1">
                           Collaborating closely to understand your vision, goals, and technical requirements.
                         </p>
                       </div>
                     </div>
                   </div>
-                  <div className="flex items-center justify-center">
+                  <div className="flex items-center justify-center shrink-0 mx-2">
                     <div className="w-8 h-1 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full"></div>
                     <i className="ri-arrow-right-line text-cyan-400 text-xl ml-2"></i>
                   </div>
-                  <div className="flex-1 group">
-                    <div className="relative bg-[#1a1a2e]/50 backdrop-blur-md border border-cyan-500/20 rounded-xl p-6 hover:border-cyan-400/50 hover:bg-[#1a1a2e]/80 transition-all duration-300">
+                  <div className="flex-1 group h-full min-w-0">
+                    <div className="relative bg-[#1a1a2e]/50 backdrop-blur-md border border-cyan-500/20 rounded-xl p-6 hover:border-cyan-400/50 hover:bg-[#1a1a2e]/80 transition-all duration-300 h-full flex flex-col">
                       <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-blue-600/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                       <div className="relative text-center space-y-4">
                         <div className="w-16 h-16 bg-blue-500/10 rounded-xl flex items-center justify-center mx-auto group-hover:bg-blue-500/20 transition-colors duration-300">
@@ -365,7 +365,7 @@ export default function OurEdge() {
                           <span className="text-white font-bold text-sm">2</span>
                         </div>
                         <h3 className="text-white font-black text-lg">Design</h3>
-                        <p className="text-white/60 text-sm leading-relaxed">
+                        <p className="text-white/60 text-sm leading-relaxed flex-1">
                           Crafting innovative, robust hardware, firmware, and software architectures to bring your ideas to life.
                         </p>
                       </div>

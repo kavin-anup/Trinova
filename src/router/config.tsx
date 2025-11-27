@@ -8,6 +8,8 @@ import AI from "../pages/ai/page";
 import Contact from "../pages/contact/page";
 import Testimonials from "../pages/testimonials/page";
 import OurEdge from "../pages/our-edge/page";
+import Blogs from "../pages/blogs/page";
+import BlogDetails from "../pages/blogs/details";
 import AdminLogin from "../pages/admin/Login";
 import AdminDashboard from "../pages/admin/Dashboard";
 import AdminHeroSlides from "../pages/admin/HeroSlides";
@@ -46,6 +48,14 @@ const routes: RouteObject[] = [
   {
     path: "/our-edge",
     element: <OurEdge />,
+  },
+  {
+    path: "/blogs",
+    element: <Blogs />,
+  },
+  {
+    path: "/blogs/:id",
+    element: <BlogDetails />,
   },
   {
     path: "/contact",

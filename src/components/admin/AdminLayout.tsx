@@ -36,7 +36,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] flex">
+    <div className="min-h-screen w-screen bg-[#0a0a0a] flex">
       {/* Sidebar */}
       <aside
         className={`${

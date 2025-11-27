@@ -53,7 +53,7 @@ export default function Footer() {
                 <img 
                   src={logoUrl} 
                   alt="Trinova AI" 
-                  className="h-12 w-auto object-contain"
+                  className="h-28 w-auto object-contain"
                 />
               ) : (
                 <>
