@@ -20,6 +20,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     { path: '/admin/ems-content', icon: 'ri-file-edit-line', label: 'EMS Content' },
     { path: '/admin/ai-content', icon: 'ri-file-edit-line', label: 'AI Content' },
     { path: '/admin/our-edge-content', icon: 'ri-file-edit-line', label: 'Our Edge Content' },
+    { path: '/admin/blogs-content', icon: 'ri-file-edit-line', label: 'Blogs Content' },
     { path: '/admin/testimonials-content', icon: 'ri-file-edit-line', label: 'Testimonials Content' },
     { path: '/admin/contact-content', icon: 'ri-file-edit-line', label: 'Contact Content' },
     // { path: '/admin/services', icon: 'ri-service-line', label: 'Services' },

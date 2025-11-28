@@ -193,6 +193,39 @@ export const contactContentAPI = {
     }),
 };
 
+// Blogs Content API (Hero Section)
+export const blogsContentAPI = {
+  get: () => apiRequest('/blogs-content'),
+  getAll: () => apiRequest('/blogs-content/admin'),
+  bulkUpdate: (sections: Array<{ sectionKey: string; contentValue: any; contentType?: string; imageUrl?: string }>) =>
+    apiRequest('/blogs-content/admin/bulk', {
+      method: 'PUT',
+      body: JSON.stringify({ sections }),
+    }),
+};
+
+// Blogs API (Articles)
+export const blogsAPI = {
+  getAll: () => apiRequest('/blogs/admin/all'),
+  getPublic: () => apiRequest('/blogs'),
+  getById: (id: string) => apiRequest(`/blogs/${id}`),
+  getByIdAdmin: (id: string) => apiRequest(`/blogs/admin/${id}`),
+  create: (data: any) =>
+    apiRequest('/blogs/admin', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+  update: (id: string, data: any) =>
+    apiRequest(`/blogs/admin/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    }),
+  delete: (id: string) =>
+    apiRequest(`/blogs/admin/${id}`, {
+      method: 'DELETE',
+    }),
+};
+
 // Services API
 export const servicesAPI = {
   getAll: () => apiRequest('/services/admin'),

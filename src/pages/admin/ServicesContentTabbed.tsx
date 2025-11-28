@@ -725,3 +725,5 @@ function IndustriesTab({ getValue, getImageUrl, handleInputChange, handleImageUp
 }
 
 
+
+

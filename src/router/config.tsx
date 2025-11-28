@@ -24,6 +24,7 @@ import AdminEMSContent from "../pages/admin/EMSContent";
 import AdminAIContent from "../pages/admin/AIContent";
 import AdminOurEdgeContent from "../pages/admin/OurEdgeContent";
 import AdminTestimonialsContent from "../pages/admin/TestimonialsContent";
+import AdminBlogsContent from "../pages/admin/BlogsContent";
 import AdminContactContent from "../pages/admin/ContactContent";
 import ProtectedRoute from "../components/admin/ProtectedRoute";
 import AdminRedirect from "../pages/admin/AdminRedirect";
@@ -135,6 +136,14 @@ const routes: RouteObject[] = [
     element: (
       <ProtectedRoute>
         <AdminTestimonialsContent />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/admin/blogs-content",
+    element: (
+      <ProtectedRoute>
+        <AdminBlogsContent />
       </ProtectedRoute>
     ),
   },
