@@ -1,14 +1,32 @@
 import Header from '../../components/layout/Header';
 import Footer from '../../components/layout/Footer';
 import { useEffect, useState } from 'react';
-import { contactContentAPI, inquiriesAPI, siteConfigAPI } from '../../services/api';
+import { contactContentAPI, siteConfigAPI } from '../../services/api';
+
+interface FormField {
+  id: string;
+  label: string;
+  name: string;
+  type: 'text' | 'email' | 'tel' | 'textarea' | 'select';
+  placeholder: string;
+  required: boolean;
+  options?: string[];
+}
+
+interface FieldErrors {
+  [key: string]: string;
+}
 
 export default function Contact() {
   const [content, setContent] = useState<any>({});
   const [siteConfig, setSiteConfig] = useState<any>({});
+  const [formFields, setFormFields] = useState<FormField[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+  const [formValues, setFormValues] = useState<{ [key: string]: string }>({});
+  const [touchedFields, setTouchedFields] = useState<{ [key: string]: boolean }>({});
 
   useEffect(() => {
     fetchContent();
@@ -22,10 +40,23 @@ export default function Contact() {
       ]);
       setContent(contentResponse.data?.content || {});
       setSiteConfig(configResponse.data?.config || {});
+      
+      // Parse form fields from content
+      const fieldsContent = contentResponse.data?.content?.form_fields?.value;
+      if (fieldsContent) {
+        try {
+          const fields = typeof fieldsContent === 'string' ? JSON.parse(fieldsContent) : fieldsContent;
+          setFormFields(Array.isArray(fields) ? fields : []);
+        } catch (e) {
+          console.error('Error parsing form fields:', e);
+          setFormFields([]);
+        }
+      }
     } catch (error) {
       console.error('Error fetching content:', error);
       setContent({});
       setSiteConfig({});
+      setFormFields([]);
     } finally {
       setLoading(false);
     }
@@ -41,43 +72,388 @@ export default function Contact() {
     return content[key]?.value || fallback;
   };
 
+  // Client-side validation
+  const validateField = (_name: string, value: string, field: FormField): string => {
+    if (field.required && !value.trim()) {
+      return `${field.label} is required`;
+    }
+
+    if (!value.trim()) return ''; // Optional fields can be empty
+
+    switch (field.type) {
+      case 'email':
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(value)) {
+          return 'Please enter a valid email address';
+        }
+        break;
+      case 'tel':
+        const phoneRegex = /^[\d\s\-\+\(\)]+$/;
+        if (!phoneRegex.test(value)) {
+          return 'Please enter a valid phone number';
+        }
+        break;
+      case 'textarea':
+        if (field.name === 'message') {
+          if (value.trim().length < 10) {
+            return 'Message must be at least 10 characters';
+          }
+          if (value.trim().length > 500) {
+            return 'Message must be less than 500 characters';
+          }
+        }
+        break;
+      case 'text':
+        if (field.name === 'firstName' || field.name === 'lastName') {
+          if (value.trim().length < 2) {
+            return `${field.label} must be at least 2 characters`;
+          }
+          if (value.trim().length > 50) {
+            return `${field.label} must be less than 50 characters`;
+          }
+        }
+        break;
+    }
+    return '';
+  };
+
+  const validateForm = (): boolean => {
+    const errors: FieldErrors = {};
+    let isValid = true;
+
+    formFields.forEach((field) => {
+      const value = formValues[field.name] || '';
+      const error = validateField(field.name, value, field);
+      if (error) {
+        errors[field.name] = error;
+        isValid = false;
+      }
+    });
+
+    setFieldErrors(errors);
+    return isValid;
+  };
+
+  const isFormValid = (): boolean => {
+    // Check if all required fields are filled and valid
+    for (const field of formFields) {
+      if (field.required) {
+        const value = formValues[field.name] || '';
+        if (!value.trim()) return false;
+        const error = validateField(field.name, value, field);
+        if (error) return false;
+      }
+    }
+    return true;
+  };
+
+  const handleFieldChange = (name: string, value: string) => {
+    setFormValues(prev => ({ ...prev, [name]: value }));
+    
+    // Clear error when user starts typing
+    if (fieldErrors[name]) {
+      setFieldErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[name];
+        return newErrors;
+      });
+    }
+
+    // Validate on blur for touched fields
+    if (touchedFields[name]) {
+      const field = formFields.find(f => f.name === name);
+      if (field) {
+        const error = validateField(name, value, field);
+        if (error) {
+          setFieldErrors(prev => ({ ...prev, [name]: error }));
+        }
+      }
+    }
+  };
+
+  const handleFieldBlur = (name: string) => {
+    setTouchedFields(prev => ({ ...prev, [name]: true }));
+    const field = formFields.find(f => f.name === name);
+    const value = formValues[name] || '';
+    if (field) {
+      const error = validateField(name, value, field);
+      if (error) {
+        setFieldErrors(prev => ({ ...prev, [name]: error }));
+      } else {
+        setFieldErrors(prev => {
+          const newErrors = { ...prev };
+          delete newErrors[name];
+          return newErrors;
+        });
+      }
+    }
+  };
+
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSubmitting(true);
     setSubmitMessage(null);
 
-    const form = e.currentTarget;
-    const formData = new FormData(form);
+    // Mark all fields as touched
+    const allTouched: { [key: string]: boolean } = {};
+    formFields.forEach(field => {
+      allTouched[field.name] = true;
+    });
+    setTouchedFields(allTouched);
+
+    // Validate form
+    if (!validateForm()) {
+      setSubmitting(false);
+      setSubmitMessage({
+        type: 'error',
+        text: 'Please fix the errors in the form before submitting.'
+      });
+      return;
+    }
 
     try {
-      const data = {
-        firstName: formData.get('firstName') as string,
-        lastName: formData.get('lastName') as string,
-        email: formData.get('email') as string,
-        phone: formData.get('phone') as string || undefined,
-        company: formData.get('company') as string || undefined,
-        service: formData.get('service') as string || undefined,
-        message: formData.get('message') as string,
-      };
+      // Build data object from form values
+      const data: any = {};
+      formFields.forEach(field => {
+        const value = formValues[field.name] || '';
+        if (value.trim() || field.required) {
+          data[field.name] = value.trim() || undefined;
+        }
+      });
 
-      const response = await inquiriesAPI.submit(data);
+      // Custom fetch to preserve error details
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+      const response = await fetch(`${API_URL}/inquiries`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      const responseData = await response.json();
+
+      if (!response.ok) {
+        // Throw error with full response data
+        const error: any = new Error(responseData.message || 'Request failed');
+        error.response = {
+          data: responseData,
+          status: response.status,
+        };
+        throw error;
+      }
       
-      if (response.success) {
+      if (responseData.success) {
         setSubmitMessage({
           type: 'success',
-          text: response.message || 'Thank you for your inquiry. We will get back to you soon!'
+          text: responseData.message || 'Thank you for your inquiry. We will get back to you soon!'
         });
-        form.reset();
+        // Reset form
+        setFormValues({});
+        setFieldErrors({});
+        setTouchedFields({});
+        (e.target as HTMLFormElement).reset();
         // Clear message after 5 seconds
         setTimeout(() => setSubmitMessage(null), 5000);
       }
     } catch (error: any) {
-      setSubmitMessage({
-        type: 'error',
-        text: error.message || 'Failed to submit form. Please try again.'
-      });
+      console.error('Form submission error:', error);
+      
+      // Try to extract error details from the error object
+      let errorData: any = null;
+      
+      // Check if error has response property (axios-style)
+      if (error.response) {
+        errorData = error.response;
+      } 
+      // Check if error has data property
+      else if (error.data) {
+        errorData = { data: error.data };
+      }
+      // Try to parse error message as JSON
+      else if (error.message) {
+        try {
+          const parsed = JSON.parse(error.message);
+          if (parsed.errors) {
+            errorData = { data: parsed };
+          }
+        } catch (e) {
+          // Not JSON, continue
+        }
+      }
+      
+      // Handle validation errors from backend
+      if (errorData?.data?.errors && Array.isArray(errorData.data.errors)) {
+        const backendErrors: FieldErrors = {};
+        let errorMessages: string[] = [];
+        
+        errorData.data.errors.forEach((err: any) => {
+          if (err.path && err.msg) {
+            // Convert backend error messages to user-friendly ones
+            let userFriendlyMsg = err.msg;
+            
+            if (err.path === 'message') {
+              if (err.msg.includes('between 10 and 500') || err.msg.includes('between 10 and 500 character')) {
+                const currentLength = (formValues.message || '').trim().length;
+                if (currentLength < 10) {
+                  userFriendlyMsg = 'Message must be at least 10 characters';
+                } else if (currentLength > 500) {
+                  userFriendlyMsg = 'Message must be less than 500 characters';
+                } else {
+                  userFriendlyMsg = 'Message must be between 10 and 500 characters';
+                }
+              }
+            }
+            
+            backendErrors[err.path] = userFriendlyMsg;
+            errorMessages.push(userFriendlyMsg);
+          } else if (err.msg) {
+            errorMessages.push(err.msg);
+          }
+        });
+        
+        setFieldErrors(backendErrors);
+        
+        // Show the first error message as toast
+        if (errorMessages.length > 0) {
+          setSubmitMessage({
+            type: 'error',
+            text: errorMessages[0]
+          });
+        } else {
+          setSubmitMessage({
+            type: 'error',
+            text: 'Please check the form and try again.'
+          });
+        }
+      } else {
+        // Generic error message
+        const errorMsg = errorData?.data?.message || error.message || 'Failed to submit form. Please try again.';
+        setSubmitMessage({
+          type: 'error',
+          text: errorMsg
+        });
+      }
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const renderFormField = (field: FormField) => {
+    const value = formValues[field.name] || '';
+    const error = fieldErrors[field.name];
+    const touched = touchedFields[field.name];
+    const hasError = touched && error;
+    const isMessageField = field.name === 'message';
+
+    const baseInputClass = `w-full px-4 py-3 bg-[#252525]/50 border rounded-lg text-white placeholder-white/40 focus:outline-none transition-colors duration-300 ${
+      hasError
+        ? 'border-red-500 focus:border-red-400'
+        : 'border-cyan-500/20 focus:border-cyan-400'
+    }`;
+
+    const labelClass = `block text-white font-medium mb-2 ${
+      field.required ? 'after:content-["*"] after:text-red-400 after:ml-1' : ''
+    }`;
+
+    switch (field.type) {
+      case 'textarea':
+        return (
+          <div key={field.id}>
+            <label htmlFor={field.name} className={labelClass}>
+              {field.label}
+            </label>
+            <textarea
+              id={field.name}
+              name={field.name}
+              rows={4}
+              maxLength={500}
+              value={value}
+              onChange={(e) => handleFieldChange(field.name, e.target.value)}
+              onBlur={() => handleFieldBlur(field.name)}
+              className={`${baseInputClass} resize-none`}
+              placeholder={isMessageField ? `${field.placeholder} (At least 10 characters)` : field.placeholder}
+              required={field.required}
+            />
+            <div className="flex justify-between items-center mt-1">
+              <p className="text-white/40 text-xs">
+                {isMessageField && value.length > 0 && value.length < 10 && (
+                  <span className="text-red-400">At least 10 characters required</span>
+                )}
+                {isMessageField && value.length >= 10 && (
+                  <span className="text-green-400">{value.length}/500 characters</span>
+                )}
+                {!isMessageField && <span>Maximum 500 characters</span>}
+              </p>
+              {!isMessageField && value.length > 0 && (
+                <span className="text-white/40 text-xs">{value.length}/500</span>
+              )}
+            </div>
+            {hasError && (
+              <p className="text-red-400 text-sm mt-1 flex items-center">
+                <i className="ri-error-warning-line mr-1"></i>
+                {error}
+              </p>
+            )}
+          </div>
+        );
+
+      case 'select':
+        return (
+          <div key={field.id}>
+            <label htmlFor={field.name} className={labelClass}>
+              {field.label}
+            </label>
+            <select
+              id={field.name}
+              name={field.name}
+              value={value}
+              onChange={(e) => handleFieldChange(field.name, e.target.value)}
+              onBlur={() => handleFieldBlur(field.name)}
+              className={`${baseInputClass} pr-8`}
+              required={field.required}
+            >
+              <option value="">{field.placeholder}</option>
+              {field.options?.map((option, idx) => (
+                <option key={idx} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
+            {hasError && (
+              <p className="text-red-400 text-sm mt-1 flex items-center">
+                <i className="ri-error-warning-line mr-1"></i>
+                {error}
+              </p>
+            )}
+          </div>
+        );
+
+      default:
+        return (
+          <div key={field.id}>
+            <label htmlFor={field.name} className={labelClass}>
+              {field.label}
+            </label>
+            <input
+              id={field.name}
+              type={field.type}
+              name={field.name}
+              value={value}
+              onChange={(e) => handleFieldChange(field.name, e.target.value)}
+              onBlur={() => handleFieldBlur(field.name)}
+              className={baseInputClass}
+              placeholder={field.placeholder}
+              required={field.required}
+            />
+            {hasError && (
+              <p className="text-red-400 text-sm mt-1 flex items-center">
+                <i className="ri-error-warning-line mr-1"></i>
+                {error}
+              </p>
+            )}
+          </div>
+        );
     }
   };
 
@@ -88,6 +464,10 @@ export default function Contact() {
       </div>
     );
   }
+
+  // Group fields for layout - first two fields side by side if available
+  const firstTwoFields = formFields.slice(0, 2);
+  const remainingFields = formFields.slice(2);
 
   return (
     <div className="min-h-screen bg-[#252525] font-['Manrope',sans-serif]">
@@ -261,110 +641,50 @@ export default function Contact() {
                 )}
 
                 {/* Contact Form */}
-                <form 
-                  className="space-y-6" 
-                  id="contact-form"
-                  onSubmit={handleFormSubmit}
-                >
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-white font-medium mb-2">First Name</label>
-                      <input 
-                        type="text" 
-                        name="firstName"
-                        className="w-full px-4 py-3 bg-[#252525]/50 border border-cyan-500/20 rounded-lg text-white placeholder-white/40 focus:border-cyan-400 focus:outline-none transition-colors duration-300"
-                        placeholder="Enter your first name"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-white font-medium mb-2">Last Name</label>
-                      <input 
-                        type="text" 
-                        name="lastName"
-                        className="w-full px-4 py-3 bg-[#252525]/50 border border-cyan-500/20 rounded-lg text-white placeholder-white/40 focus:border-cyan-400 focus:outline-none transition-colors duration-300"
-                        placeholder="Enter your last name"
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-white font-medium mb-2">Email Address</label>
-                    <input 
-                      type="email" 
-                      name="email"
-                      className="w-full px-4 py-3 bg-[#252525]/50 border border-cyan-500/20 rounded-lg text-white placeholder-white/40 focus:border-cyan-400 focus:outline-none transition-colors duration-300"
-                      placeholder="Enter your email address"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-white font-medium mb-2">Phone Number</label>
-                    <input 
-                      type="tel" 
-                      name="phone"
-                      className="w-full px-4 py-3 bg-[#252525]/50 border border-cyan-500/20 rounded-lg text-white placeholder-white/40 focus:border-cyan-400 focus:outline-none transition-colors duration-300"
-                      placeholder="Enter your phone number"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-white font-medium mb-2">Company</label>
-                    <input 
-                      type="text" 
-                      name="company"
-                      className="w-full px-4 py-3 bg-[#252525]/50 border border-cyan-500/20 rounded-lg text-white placeholder-white/40 focus:border-cyan-400 focus:outline-none transition-colors duration-300"
-                      placeholder="Enter your company name"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-white font-medium mb-2">Service Interest</label>
-                    <select 
-                      name="service"
-                      className="w-full px-4 py-3 pr-8 bg-[#252525]/50 border border-cyan-500/20 rounded-lg text-white focus:border-cyan-400 focus:outline-none transition-colors duration-300"
-                      required
-                    >
-                      <option value="">Select a service</option>
-                      <option value="ai-solutions">AI Solutions</option>
-                      <option value="ems">Electronics Manufacturing Services</option>
-                      <option value="hardware-design">Hardware Design</option>
-                      <option value="firmware-development">Firmware Development</option>
-                      <option value="mobile-app">Mobile App Development</option>
-                      <option value="full-stack">End-to-End Development</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-white font-medium mb-2">Project Details</label>
-                    <textarea 
-                      name="message"
-                      rows={4}
-                      maxLength={500}
-                      className="w-full px-4 py-3 bg-[#252525]/50 border border-cyan-500/20 rounded-lg text-white placeholder-white/40 focus:border-cyan-400 focus:outline-none transition-colors duration-300 resize-none"
-                      placeholder="Tell us about your project requirements, timeline, and any specific needs..."
-                      required
-                    ></textarea>
-                    <p className="text-white/40 text-xs mt-1">Maximum 500 characters</p>
-                  </div>
-
-                  <button 
-                    type="submit"
-                    disabled={submitting}
-                    className="w-full px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold rounded-xl hover:shadow-2xl hover:shadow-cyan-500/50 hover:scale-105 transition-all duration-300 whitespace-nowrap cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                {formFields.length > 0 ? (
+                  <form 
+                    className="space-y-6" 
+                    id="contact-form"
+                    onSubmit={handleFormSubmit}
                   >
-                    {submitting ? (
-                      <>
-                        <i className="ri-loader-4-line animate-spin mr-2"></i>
-                        Sending...
-                      </>
-                    ) : (
-                      'Send Message'
+                    {/* First two fields side by side if available */}
+                    {firstTwoFields.length === 2 && (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {firstTwoFields.map(field => renderFormField(field))}
+                      </div>
                     )}
-                  </button>
-                </form>
+
+                    {/* Single field if only one in first two */}
+                    {firstTwoFields.length === 1 && (
+                      <div>
+                        {renderFormField(firstTwoFields[0])}
+                      </div>
+                    )}
+
+                    {/* Remaining fields */}
+                    {remainingFields.map(field => renderFormField(field))}
+
+                    <button 
+                      type="submit"
+                      disabled={submitting || !isFormValid()}
+                      className="w-full px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold rounded-xl hover:shadow-2xl hover:shadow-cyan-500/50 hover:scale-105 transition-all duration-300 whitespace-nowrap cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                    >
+                      {submitting ? (
+                        <>
+                          <i className="ri-loader-4-line animate-spin mr-2"></i>
+                          Sending...
+                        </>
+                      ) : (
+                        'Send Message'
+                      )}
+                    </button>
+                  </form>
+                ) : (
+                  <div className="text-center py-8 text-white/40">
+                    <i className="ri-file-list-line text-4xl mb-2"></i>
+                    <p>Form fields are being configured. Please check back later.</p>
+                  </div>
+                )}
               </div>
             </div>
           </div>
