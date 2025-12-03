@@ -1,9 +1,11 @@
-import Header from '../../components/layout/Header';
-import Footer from '../../components/layout/Footer';
-import { useEffect, useState } from 'react';
-import { aiContentAPI } from '../../services/api';
+import Header from "../../components/layout/Header";
+import Footer from "../../components/layout/Footer";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { aiContentAPI } from "../../services/api";
 
 export default function AI() {
+  const navigate = useNavigate();
   const [content, setContent] = useState<any>({});
   const [loading, setLoading] = useState(true);
 
@@ -16,7 +18,7 @@ export default function AI() {
       const response = await aiContentAPI.get();
       setContent(response.data?.content || {});
     } catch (error) {
-      console.error('Error fetching content:', error);
+      console.error("Error fetching content:", error);
       setContent({});
     } finally {
       setLoading(false);
@@ -24,11 +26,11 @@ export default function AI() {
   };
 
   // Helper to get content with fallback
-  const getContent = (key: string, fallback: string = '') => {
+  const getContent = (key: string, fallback: string = "") => {
     return content[key]?.value || fallback;
   };
 
-  const getImageUrl = (key: string, fallback: string = '') => {
+  const getImageUrl = (key: string, fallback: string = "") => {
     return content[key]?.imageUrl || fallback;
   };
 
@@ -52,18 +54,72 @@ export default function AI() {
           <div className="absolute inset-0 opacity-10">
             <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
               <defs>
-                <pattern id="neural-grid" width="100" height="100" patternUnits="userSpaceOnUse">
-                  <circle cx="50" cy="50" r="2" fill="currentColor" className="text-cyan-400">
-                    <animate attributeName="opacity" values="0.3;1;0.3" dur="3s" repeatCount="indefinite"/>
+                <pattern
+                  id="neural-grid"
+                  width="100"
+                  height="100"
+                  patternUnits="userSpaceOnUse"
+                >
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="2"
+                    fill="currentColor"
+                    className="text-cyan-400"
+                  >
+                    <animate
+                      attributeName="opacity"
+                      values="0.3;1;0.3"
+                      dur="3s"
+                      repeatCount="indefinite"
+                    />
                   </circle>
-                  <circle cx="20" cy="20" r="1.5" fill="currentColor" className="text-blue-400">
-                    <animate attributeName="opacity" values="0.2;0.8;0.2" dur="2s" repeatCount="indefinite"/>
+                  <circle
+                    cx="20"
+                    cy="20"
+                    r="1.5"
+                    fill="currentColor"
+                    className="text-blue-400"
+                  >
+                    <animate
+                      attributeName="opacity"
+                      values="0.2;0.8;0.2"
+                      dur="2s"
+                      repeatCount="indefinite"
+                    />
                   </circle>
-                  <circle cx="80" cy="30" r="1" fill="currentColor" className="text-cyan-300">
-                    <animate attributeName="opacity" values="0.1;0.6;0.1" dur="2.5s" repeatCount="indefinite"/>
+                  <circle
+                    cx="80"
+                    cy="30"
+                    r="1"
+                    fill="currentColor"
+                    className="text-cyan-300"
+                  >
+                    <animate
+                      attributeName="opacity"
+                      values="0.1;0.6;0.1"
+                      dur="2.5s"
+                      repeatCount="indefinite"
+                    />
                   </circle>
-                  <line x1="50" y1="50" x2="20" y2="20" stroke="currentColor" strokeWidth="0.5" className="text-cyan-400/30"/>
-                  <line x1="50" y1="50" x2="80" y2="30" stroke="currentColor" strokeWidth="0.5" className="text-blue-400/30"/>
+                  <line
+                    x1="50"
+                    y1="50"
+                    x2="20"
+                    y2="20"
+                    stroke="currentColor"
+                    strokeWidth="0.5"
+                    className="text-cyan-400/30"
+                  />
+                  <line
+                    x1="50"
+                    y1="50"
+                    x2="80"
+                    y2="30"
+                    stroke="currentColor"
+                    strokeWidth="0.5"
+                    className="text-blue-400/30"
+                  />
                 </pattern>
               </defs>
               <rect width="100%" height="100%" fill="url(#neural-grid)" />
@@ -72,24 +128,36 @@ export default function AI() {
 
           {/* Gradient Orbs */}
           <div className="absolute top-1/4 -left-48 w-96 h-96 bg-cyan-500/20 rounded-full blur-[120px] animate-pulse"></div>
-          <div className="absolute bottom-1/4 -right-48 w-[500px] h-[500px] bg-blue-600/20 rounded-full blur-[140px] animate-pulse" style={{ animationDelay: '2s' }}></div>
-          
+          <div
+            className="absolute bottom-1/4 -right-48 w-[500px] h-[500px] bg-blue-600/20 rounded-full blur-[140px] animate-pulse"
+            style={{ animationDelay: "2s" }}
+          ></div>
+
           {/* Floating AI Particles */}
           <div className="absolute top-1/3 left-1/4 w-3 h-3 bg-cyan-400 rounded-full animate-pulse opacity-60">
             <div className="absolute inset-0 bg-cyan-400 rounded-full animate-ping"></div>
           </div>
-          <div className="absolute top-2/3 right-1/3 w-2 h-2 bg-blue-400 rounded-full animate-pulse opacity-40" style={{ animationDelay: '1s' }}>
+          <div
+            className="absolute top-2/3 right-1/3 w-2 h-2 bg-blue-400 rounded-full animate-pulse opacity-40"
+            style={{ animationDelay: "1s" }}
+          >
             <div className="absolute inset-0 bg-blue-400 rounded-full animate-ping"></div>
           </div>
-          <div className="absolute bottom-1/3 left-1/3 w-2.5 h-2.5 bg-cyan-300 rounded-full animate-pulse opacity-50" style={{ animationDelay: '1.5s' }}>
+          <div
+            className="absolute bottom-1/3 left-1/3 w-2.5 h-2.5 bg-cyan-300 rounded-full animate-pulse opacity-50"
+            style={{ animationDelay: "1.5s" }}
+          >
             <div className="absolute inset-0 bg-cyan-300 rounded-full animate-ping"></div>
           </div>
         </div>
 
         {/* Hero Background Image */}
         <div className="absolute inset-0 opacity-30">
-          <img 
-            src={getImageUrl('hero_background_image', 'https://readdy.ai/api/search-image?query=Futuristic%20digital%20brain%20neural%20network%20merging%20with%20glowing%20electric%20blue%20circuit%20board%20patterns%2C%20dark%20cyberpunk%20aesthetic%20with%20cyan%20light%20traces%2C%20abstract%20CGI%20render%20showing%20artificial%20intelligence%20consciousness%2C%20high-tech%20visualization%20of%20AI%20processing%20power%2C%20dramatic%20lighting%20with%20electric%20blue%20accents%2C%20photorealistic%203D%20composition%20with%20depth%20and%20complexity%2C%20dark%20background%20with%20luminous%20neural%20pathways&width=1920&height=1080&seq=ai-hero-brain-circuit&orientation=landscape')}
+          <img
+            src={getImageUrl(
+              "hero_background_image",
+              "https://readdy.ai/api/search-image?query=Futuristic%20digital%20brain%20neural%20network%20merging%20with%20glowing%20electric%20blue%20circuit%20board%20patterns%2C%20dark%20cyberpunk%20aesthetic%20with%20cyan%20light%20traces%2C%20abstract%20CGI%20render%20showing%20artificial%20intelligence%20consciousness%2C%20high-tech%20visualization%20of%20AI%20processing%20power%2C%20dramatic%20lighting%20with%20electric%20blue%20accents%2C%20photorealistic%203D%20composition%20with%20depth%20and%20complexity%2C%20dark%20background%20with%20luminous%20neural%20pathways&width=1920&height=1080&seq=ai-hero-brain-circuit&orientation=landscape"
+            )}
             alt="AI Neural Network and Circuit Board Fusion"
             className="w-full h-full object-cover object-center"
           />
@@ -101,34 +169,36 @@ export default function AI() {
             {/* Badge */}
             <div className="inline-flex items-center space-x-2 px-5 py-2.5 bg-cyan-500/10 border border-cyan-500/30 rounded-full backdrop-blur-sm">
               <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></div>
-              <span className="text-cyan-400 text-sm font-semibold tracking-wide">{getContent('hero_badge', 'AI-Powered Innovation')}</span>
+              <span className="text-cyan-400 text-sm font-semibold tracking-wide">
+                {getContent("hero_badge", "AI-Powered Innovation")}
+              </span>
             </div>
 
             {/* Main Heading */}
             <h2 className="text-5xl md:text-6xl lg:text-7xl font-extrabold text-white leading-[1.1] tracking-tight">
-              {getContent('hero_title_line1', 'Intelligent Systems:')}
+              {getContent("hero_title_line1", "Intelligent Systems:")}
               <span className="block mt-3 bg-gradient-to-r from-cyan-400 via-blue-500 to-cyan-400 bg-clip-text text-transparent">
-                {getContent('hero_title_line2', 'The AI Core of')}
+                {getContent("hero_title_line2", "The AI Core of")}
               </span>
               <span className="block mt-3 bg-gradient-to-r from-cyan-400 via-blue-500 to-cyan-400 bg-clip-text text-transparent">
-                {getContent('hero_title_line3', 'Future Electronics')}
+                {getContent("hero_title_line3", "Future Electronics")}
               </span>
             </h2>
 
             {/* Subtitle */}
             <p className="text-xl lg:text-2xl text-white/70 leading-relaxed max-w-4xl mx-auto font-medium">
-              {getContent('hero_subtitle', 'Trinova AI leverages advanced AI, Machine Learning, and Computer Vision to revolutionize Robotics, Medical Electronics, and Home Automation—enhancing efficiency and user experience across critical industries.')}
+              {getContent(
+                "hero_subtitle",
+                "Trinova AI leverages advanced AI, Machine Learning, and Computer Vision to revolutionize Robotics, Medical Electronics, and Home Automation—enhancing efficiency and user experience across critical industries."
+              )}
             </p>
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-              <button className="px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold rounded-xl hover:shadow-2xl hover:shadow-cyan-500/50 hover:scale-105 transition-all duration-300 whitespace-nowrap cursor-pointer group">
-                <span className="flex items-center justify-center space-x-2">
-                  <span>Explore AI Solutions</span>
-                  <i className="ri-arrow-right-line group-hover:translate-x-1 transition-transform"></i>
-                </span>
-              </button>
-              <button className="px-8 py-4 bg-white/5 border-2 border-cyan-400/50 text-white font-bold rounded-xl hover:bg-cyan-400/10 hover:border-cyan-400 hover:scale-105 backdrop-blur-sm transition-all duration-300 whitespace-nowrap cursor-pointer group">
+              <button
+                onClick={() => navigate("/contact")}
+                className="px-8 py-4 bg-white/5 border-2 border-cyan-400/50 text-white font-bold rounded-xl hover:bg-cyan-400/10 hover:border-cyan-400 hover:scale-105 backdrop-blur-sm transition-all duration-300 whitespace-nowrap cursor-pointer group"
+              >
                 <span className="flex items-center justify-center space-x-2">
                   <span>Start AI Project</span>
                   <i className="ri-brain-line group-hover:scale-110 transition-transform"></i>
@@ -139,16 +209,28 @@ export default function AI() {
             {/* AI Stats */}
             <div className="grid grid-cols-3 gap-8 pt-12 max-w-3xl mx-auto">
               <div className="text-center">
-                <div className="text-3xl lg:text-4xl font-black bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">{getContent('hero_stat_1_value', '50+')}</div>
-                <div className="text-white/60 text-sm font-medium mt-2">{getContent('hero_stat_1_label', 'AI Models Deployed')}</div>
+                <div className="text-3xl lg:text-4xl font-black bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
+                  {getContent("hero_stat_1_value", "50+")}
+                </div>
+                <div className="text-white/60 text-sm font-medium mt-2">
+                  {getContent("hero_stat_1_label", "AI Models Deployed")}
+                </div>
               </div>
               <div className="text-center border-x border-white/10">
-                <div className="text-3xl lg:text-4xl font-black bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">{getContent('hero_stat_2_value', '99.8%')}</div>
-                <div className="text-white/60 text-sm font-medium mt-2">{getContent('hero_stat_2_label', 'AI Accuracy Rate')}</div>
+                <div className="text-3xl lg:text-4xl font-black bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
+                  {getContent("hero_stat_2_value", "99.8%")}
+                </div>
+                <div className="text-white/60 text-sm font-medium mt-2">
+                  {getContent("hero_stat_2_label", "AI Accuracy Rate")}
+                </div>
               </div>
               <div className="text-center">
-                <div className="text-3xl lg:text-4xl font-black bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">{getContent('hero_stat_3_value', '3')}</div>
-                <div className="text-white/60 text-sm font-medium mt-2">{getContent('hero_stat_3_label', 'Key Industries')}</div>
+                <div className="text-3xl lg:text-4xl font-black bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
+                  {getContent("hero_stat_3_value", "3")}
+                </div>
+                <div className="text-white/60 text-sm font-medium mt-2">
+                  {getContent("hero_stat_3_label", "Key Industries")}
+                </div>
               </div>
             </div>
           </div>
@@ -156,7 +238,9 @@ export default function AI() {
 
         {/* Scroll Indicator */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center space-y-2 animate-bounce">
-          <span className="text-white/40 text-sm font-medium">Discover AI Solutions</span>
+          <span className="text-white/40 text-sm font-medium">
+            Discover AI Solutions
+          </span>
           <i className="ri-arrow-down-line text-cyan-400 text-2xl"></i>
         </div>
       </section>
@@ -174,18 +258,26 @@ export default function AI() {
           <div className="text-center space-y-6 mb-20">
             <div className="inline-flex items-center space-x-2 px-4 py-2 bg-cyan-500/10 border border-cyan-500/30 rounded-full">
               <i className="ri-cpu-line text-cyan-400"></i>
-              <span className="text-cyan-400 text-sm font-semibold">{getContent('applications_badge', 'AI Applications')}</span>
+              <span className="text-cyan-400 text-sm font-semibold">
+                {getContent("applications_badge", "AI Applications")}
+              </span>
             </div>
 
             <h2 className="text-4xl lg:text-5xl font-black text-white leading-tight">
-              {getContent('applications_title_line1', 'Revolutionizing Key Industries')}
+              {getContent(
+                "applications_title_line1",
+                "Revolutionizing Key Industries"
+              )}
               <span className="block bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent mt-1">
-                {getContent('applications_title_line2', 'with AI')}
+                {getContent("applications_title_line2", "with AI")}
               </span>
             </h2>
 
             <p className="text-xl text-white/70 leading-relaxed max-w-3xl mx-auto">
-              {getContent('applications_description', 'Transforming critical sectors through intelligent automation and advanced AI integration')}
+              {getContent(
+                "applications_description",
+                "Transforming critical sectors through intelligent automation and advanced AI integration"
+              )}
             </p>
           </div>
 
@@ -196,14 +288,17 @@ export default function AI() {
               <div className="relative lg:h-[500px] h-[350px]">
                 <div className="relative h-full rounded-2xl overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/20 via-blue-600/20 to-purple-600/20 rounded-2xl blur-xl"></div>
-                  
+
                   <div className="relative h-full bg-gradient-to-br from-[#1a1a2e] to-[#0a0a0a] rounded-2xl border border-cyan-500/20 overflow-hidden">
-                    <img 
-                      src={getImageUrl('home_automation_image', 'https://readdy.ai/api/search-image?query=Futuristic%20smart%20home%20kitchen%20with%20holographic%20interfaces%20and%20AI%20control%20panels%2C%20dark%20modern%20interior%20with%20electric%20blue%20accent%20lighting%2C%20voice%20and%20gesture%20control%20visualization%2C%20intelligent%20home%20automation%20system%20with%20glowing%20touch%20screens%2C%20sleek%20minimalist%20design%20with%20cyan%20light%20accents%2C%20photorealistic%20interior%20showing%20seamless%20living%20technology%20integration&width=600&height=500&seq=ai-smart-home&orientation=landscape')}
+                    <img
+                      src={getImageUrl(
+                        "home_automation_image",
+                        "https://readdy.ai/api/search-image?query=Futuristic%20smart%20home%20kitchen%20with%20holographic%20interfaces%20and%20AI%20control%20panels%2C%20dark%20modern%20interior%20with%20electric%20blue%20accent%20lighting%2C%20voice%20and%20gesture%20control%20visualization%2C%20intelligent%20home%20automation%20system%20with%20glowing%20touch%20screens%2C%20sleek%20minimalist%20design%20with%20cyan%20light%20accents%2C%20photorealistic%20interior%20showing%20seamless%20living%20technology%20integration&width=600&height=500&seq=ai-smart-home&orientation=landscape"
+                      )}
                       alt="AI-Powered Smart Home with Holographic Interfaces"
                       className="w-full h-full object-cover object-center opacity-90"
                     />
-                    
+
                     <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent"></div>
                   </div>
 
@@ -213,8 +308,18 @@ export default function AI() {
                         <i className="ri-home-smile-line text-white text-lg"></i>
                       </div>
                       <div>
-                        <div className="text-white font-bold">{getContent('home_automation_callout_title', 'Smart Living')}</div>
-                        <div className="text-cyan-400 text-sm font-medium">{getContent('home_automation_callout_subtitle', 'AI-Powered Automation')}</div>
+                        <div className="text-white font-bold">
+                          {getContent(
+                            "home_automation_callout_title",
+                            "Smart Living"
+                          )}
+                        </div>
+                        <div className="text-cyan-400 text-sm font-medium">
+                          {getContent(
+                            "home_automation_callout_subtitle",
+                            "AI-Powered Automation"
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -225,14 +330,23 @@ export default function AI() {
               <div className="space-y-6">
                 <div className="space-y-4">
                   <h3 className="text-3xl lg:text-4xl font-black text-white leading-tight">
-                    {getContent('home_automation_title_line1', 'AI in Home Automation:')}
+                    {getContent(
+                      "home_automation_title_line1",
+                      "AI in Home Automation:"
+                    )}
                     <span className="block bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent mt-1">
-                      {getContent('home_automation_title_line2', 'Smarter Homes, Seamless Living')}
+                      {getContent(
+                        "home_automation_title_line2",
+                        "Smarter Homes, Seamless Living"
+                      )}
                     </span>
                   </h3>
-                  
+
                   <p className="text-lg text-white/70 leading-relaxed">
-                    {getContent('home_automation_description', 'Transform your living space into an intelligent ecosystem that anticipates your needs and responds intuitively to your lifestyle.')}
+                    {getContent(
+                      "home_automation_description",
+                      "Transform your living space into an intelligent ecosystem that anticipates your needs and responds intuitively to your lifestyle."
+                    )}
                   </p>
                 </div>
 
@@ -243,9 +357,19 @@ export default function AI() {
                       <div className="w-8 h-8 bg-cyan-500/10 rounded-lg flex items-center justify-center">
                         <i className="ri-mic-line text-cyan-400 text-sm"></i>
                       </div>
-                      <h4 className="text-white font-bold text-sm">{getContent('home_automation_feature_1_title', 'Voice & Gesture Control')}</h4>
+                      <h4 className="text-white font-bold text-sm">
+                        {getContent(
+                          "home_automation_feature_1_title",
+                          "Voice & Gesture Control"
+                        )}
+                      </h4>
                     </div>
-                    <p className="text-white/60 text-xs leading-relaxed">{getContent('home_automation_feature_1_text', 'Natural interaction with smart devices')}</p>
+                    <p className="text-white/60 text-xs leading-relaxed">
+                      {getContent(
+                        "home_automation_feature_1_text",
+                        "Natural interaction with smart devices"
+                      )}
+                    </p>
                   </div>
 
                   <div className="bg-[#1a1a2e]/50 backdrop-blur-md border border-cyan-500/20 rounded-xl p-4 hover:border-cyan-400/50 transition-all duration-300">
@@ -253,9 +377,19 @@ export default function AI() {
                       <div className="w-8 h-8 bg-blue-500/10 rounded-lg flex items-center justify-center">
                         <i className="ri-temp-cold-line text-blue-400 text-sm"></i>
                       </div>
-                      <h4 className="text-white font-bold text-sm">{getContent('home_automation_feature_2_title', 'Smart Climate Control')}</h4>
+                      <h4 className="text-white font-bold text-sm">
+                        {getContent(
+                          "home_automation_feature_2_title",
+                          "Smart Climate Control"
+                        )}
+                      </h4>
                     </div>
-                    <p className="text-white/60 text-xs leading-relaxed">{getContent('home_automation_feature_2_text', 'Adaptive temperature management')}</p>
+                    <p className="text-white/60 text-xs leading-relaxed">
+                      {getContent(
+                        "home_automation_feature_2_text",
+                        "Adaptive temperature management"
+                      )}
+                    </p>
                   </div>
 
                   <div className="bg-[#1a1a2e]/50 backdrop-blur-md border border-cyan-500/20 rounded-xl p-4 hover:border-cyan-400/50 transition-all duration-300">
@@ -263,9 +397,19 @@ export default function AI() {
                       <div className="w-8 h-8 bg-cyan-500/10 rounded-lg flex items-center justify-center">
                         <i className="ri-shield-check-line text-cyan-400 text-sm"></i>
                       </div>
-                      <h4 className="text-white font-bold text-sm">{getContent('home_automation_feature_3_title', 'Advanced Security')}</h4>
+                      <h4 className="text-white font-bold text-sm">
+                        {getContent(
+                          "home_automation_feature_3_title",
+                          "Advanced Security"
+                        )}
+                      </h4>
                     </div>
-                    <p className="text-white/60 text-xs leading-relaxed">{getContent('home_automation_feature_3_text', 'AI-powered threat detection')}</p>
+                    <p className="text-white/60 text-xs leading-relaxed">
+                      {getContent(
+                        "home_automation_feature_3_text",
+                        "AI-powered threat detection"
+                      )}
+                    </p>
                   </div>
 
                   <div className="bg-[#1a1a2e]/50 backdrop-blur-md border border-cyan-500/20 rounded-xl p-4 hover:border-cyan-400/50 transition-all duration-300">
@@ -273,9 +417,19 @@ export default function AI() {
                       <div className="w-8 h-8 bg-blue-500/10 rounded-lg flex items-center justify-center">
                         <i className="ri-lightbulb-line text-blue-400 text-sm"></i>
                       </div>
-                      <h4 className="text-white font-bold text-sm">{getContent('home_automation_feature_4_title', 'Intelligent Lighting')}</h4>
+                      <h4 className="text-white font-bold text-sm">
+                        {getContent(
+                          "home_automation_feature_4_title",
+                          "Intelligent Lighting"
+                        )}
+                      </h4>
                     </div>
-                    <p className="text-white/60 text-xs leading-relaxed">{getContent('home_automation_feature_4_text', 'Adaptive lighting optimization')}</p>
+                    <p className="text-white/60 text-xs leading-relaxed">
+                      {getContent(
+                        "home_automation_feature_4_text",
+                        "Adaptive lighting optimization"
+                      )}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -289,14 +443,23 @@ export default function AI() {
               <div className="space-y-6 lg:order-1">
                 <div className="space-y-4">
                   <h3 className="text-3xl lg:text-4xl font-black text-white leading-tight">
-                    {getContent('medical_title_line1', 'AI in Medical Electronics:')}
+                    {getContent(
+                      "medical_title_line1",
+                      "AI in Medical Electronics:"
+                    )}
                     <span className="block bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent mt-1">
-                      {getContent('medical_title_line2', 'Enhancing Healthcare with AI-Powered Devices')}
+                      {getContent(
+                        "medical_title_line2",
+                        "Enhancing Healthcare with AI-Powered Devices"
+                      )}
                     </span>
                   </h3>
-                  
+
                   <p className="text-lg text-white/70 leading-relaxed">
-                    {getContent('medical_description', 'Revolutionizing healthcare through intelligent medical devices that provide precise diagnostics and personalized patient care.')}
+                    {getContent(
+                      "medical_description",
+                      "Revolutionizing healthcare through intelligent medical devices that provide precise diagnostics and personalized patient care."
+                    )}
                   </p>
                 </div>
 
@@ -307,9 +470,19 @@ export default function AI() {
                       <div className="w-8 h-8 bg-cyan-500/10 rounded-lg flex items-center justify-center">
                         <i className="ri-heart-pulse-line text-cyan-400 text-sm"></i>
                       </div>
-                      <h4 className="text-white font-bold text-sm">{getContent('medical_feature_1_title', 'Remote Monitoring')}</h4>
+                      <h4 className="text-white font-bold text-sm">
+                        {getContent(
+                          "medical_feature_1_title",
+                          "Remote Monitoring"
+                        )}
+                      </h4>
                     </div>
-                    <p className="text-white/60 text-xs leading-relaxed">{getContent('medical_feature_1_text', 'Continuous patient health tracking')}</p>
+                    <p className="text-white/60 text-xs leading-relaxed">
+                      {getContent(
+                        "medical_feature_1_text",
+                        "Continuous patient health tracking"
+                      )}
+                    </p>
                   </div>
 
                   <div className="bg-[#1a1a2e]/50 backdrop-blur-md border border-cyan-500/20 rounded-xl p-4 hover:border-cyan-400/50 transition-all duration-300">
@@ -317,9 +490,19 @@ export default function AI() {
                       <div className="w-8 h-8 bg-blue-500/10 rounded-lg flex items-center justify-center">
                         <i className="ri-smartphone-line text-blue-400 text-sm"></i>
                       </div>
-                      <h4 className="text-white font-bold text-sm">{getContent('medical_feature_2_title', 'Wearable Health Devices')}</h4>
+                      <h4 className="text-white font-bold text-sm">
+                        {getContent(
+                          "medical_feature_2_title",
+                          "Wearable Health Devices"
+                        )}
+                      </h4>
                     </div>
-                    <p className="text-white/60 text-xs leading-relaxed">{getContent('medical_feature_2_text', 'Smart health monitoring wearables')}</p>
+                    <p className="text-white/60 text-xs leading-relaxed">
+                      {getContent(
+                        "medical_feature_2_text",
+                        "Smart health monitoring wearables"
+                      )}
+                    </p>
                   </div>
 
                   <div className="bg-[#1a1a2e]/50 backdrop-blur-md border border-cyan-500/20 rounded-xl p-4 hover:border-cyan-400/50 transition-all duration-300">
@@ -327,9 +510,19 @@ export default function AI() {
                       <div className="w-8 h-8 bg-cyan-500/10 rounded-lg flex items-center justify-center">
                         <i className="ri-scan-line text-cyan-400 text-sm"></i>
                       </div>
-                      <h4 className="text-white font-bold text-sm">{getContent('medical_feature_3_title', 'Intelligent Imaging')}</h4>
+                      <h4 className="text-white font-bold text-sm">
+                        {getContent(
+                          "medical_feature_3_title",
+                          "Intelligent Imaging"
+                        )}
+                      </h4>
                     </div>
-                    <p className="text-white/60 text-xs leading-relaxed">{getContent('medical_feature_3_text', 'AI-enhanced medical imaging')}</p>
+                    <p className="text-white/60 text-xs leading-relaxed">
+                      {getContent(
+                        "medical_feature_3_text",
+                        "AI-enhanced medical imaging"
+                      )}
+                    </p>
                   </div>
 
                   <div className="bg-[#1a1a2e]/50 backdrop-blur-md border border-cyan-500/20 rounded-xl p-4 hover:border-cyan-400/50 transition-all duration-300">
@@ -337,9 +530,19 @@ export default function AI() {
                       <div className="w-8 h-8 bg-blue-500/10 rounded-lg flex items-center justify-center">
                         <i className="ri-stethoscope-line text-blue-400 text-sm"></i>
                       </div>
-                      <h4 className="text-white font-bold text-sm">{getContent('medical_feature_4_title', 'AI Diagnostics')}</h4>
+                      <h4 className="text-white font-bold text-sm">
+                        {getContent(
+                          "medical_feature_4_title",
+                          "AI Diagnostics"
+                        )}
+                      </h4>
                     </div>
-                    <p className="text-white/60 text-xs leading-relaxed">{getContent('medical_feature_4_text', 'Intelligent diagnostic assistance')}</p>
+                    <p className="text-white/60 text-xs leading-relaxed">
+                      {getContent(
+                        "medical_feature_4_text",
+                        "Intelligent diagnostic assistance"
+                      )}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -348,14 +551,17 @@ export default function AI() {
               <div className="relative lg:h-[500px] h-[350px] lg:order-2">
                 <div className="relative h-full rounded-2xl overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/20 via-blue-600/20 to-purple-600/20 rounded-2xl blur-xl"></div>
-                  
+
                   <div className="relative h-full bg-gradient-to-br from-[#1a1a2e] to-[#0a0a0a] rounded-2xl border border-cyan-500/20 overflow-hidden">
-                    <img 
-                      src={getImageUrl('medical_image', 'https://readdy.ai/api/search-image?query=Advanced%20medical%20monitoring%20device%20with%20AI-powered%20diagnostic%20display%20showing%20patient%20vital%20signs%20and%20health%20data%20visualization%2C%20modern%20healthcare%20technology%20with%20electric%20blue%20interface%20elements%2C%20wearable%20health%20sensors%20and%20smart%20medical%20equipment%2C%20dark%20professional%20medical%20environment%20with%20cyan%20accent%20lighting%2C%20photorealistic%20medical%20electronics%20with%20holographic%20data%20overlays&width=600&height=500&seq=ai-medical-devices&orientation=landscape')}
+                    <img
+                      src={getImageUrl(
+                        "medical_image",
+                        "https://readdy.ai/api/search-image?query=Advanced%20medical%20monitoring%20device%20with%20AI-powered%20diagnostic%20display%20showing%20patient%20vital%20signs%20and%20health%20data%20visualization%2C%20modern%20healthcare%20technology%20with%20electric%20blue%20interface%20elements%2C%20wearable%20health%20sensors%20and%20smart%20medical%20equipment%2C%20dark%20professional%20medical%20environment%20with%20cyan%20accent%20lighting%2C%20photorealistic%20medical%20electronics%20with%20holographic%20data%20overlays&width=600&height=500&seq=ai-medical-devices&orientation=landscape"
+                      )}
                       alt="AI-Powered Medical Monitoring Devices"
                       className="w-full h-full object-cover object-center opacity-90"
                     />
-                    
+
                     <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent"></div>
                   </div>
 
@@ -365,8 +571,18 @@ export default function AI() {
                         <i className="ri-health-book-line text-white text-lg"></i>
                       </div>
                       <div>
-                        <div className="text-white font-bold">{getContent('medical_callout_title', 'Smart Healthcare')}</div>
-                        <div className="text-cyan-400 text-sm font-medium">{getContent('medical_callout_subtitle', 'AI-Enhanced Diagnostics')}</div>
+                        <div className="text-white font-bold">
+                          {getContent(
+                            "medical_callout_title",
+                            "Smart Healthcare"
+                          )}
+                        </div>
+                        <div className="text-cyan-400 text-sm font-medium">
+                          {getContent(
+                            "medical_callout_subtitle",
+                            "AI-Enhanced Diagnostics"
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -382,14 +598,17 @@ export default function AI() {
               <div className="relative lg:h-[500px] h-[350px]">
                 <div className="relative h-full rounded-2xl overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/20 via-blue-600/20 to-purple-600/20 rounded-2xl blur-xl"></div>
-                  
+
                   <div className="relative h-full bg-gradient-to-br from-[#1a1a2e] to-[#0a0a0a] rounded-2xl border border-cyan-500/20 overflow-hidden">
-                    <img 
-                      src={getImageUrl('robotics_image', 'https://readdy.ai/api/search-image?query=Advanced%20industrial%20robotic%20arm%20with%20AI%20processing%20capabilities%20in%20modern%20automated%20factory%2C%20cinematic%20dark%20lighting%20with%20electric%20blue%20accent%20illumination%2C%20precision%20manufacturing%20robot%20performing%20complex%20assembly%20tasks%2C%20high-tech%20automation%20environment%20with%20glowing%20control%20interfaces%2C%20photorealistic%20industrial%20robotics%20with%20cyan%20light%20effects%20and%20sophisticated%20mechanical%20design&width=600&height=500&seq=ai-robotics-automation&orientation=landscape')}
+                    <img
+                      src={getImageUrl(
+                        "robotics_image",
+                        "https://readdy.ai/api/search-image?query=Advanced%20industrial%20robotic%20arm%20with%20AI%20processing%20capabilities%20in%20modern%20automated%20factory%2C%20cinematic%20dark%20lighting%20with%20electric%20blue%20accent%20illumination%2C%20precision%20manufacturing%20robot%20performing%20complex%20assembly%20tasks%2C%20high-tech%20automation%20environment%20with%20glowing%20control%20interfaces%2C%20photorealistic%20industrial%20robotics%20with%20cyan%20light%20effects%20and%20sophisticated%20mechanical%20design&width=600&height=500&seq=ai-robotics-automation&orientation=landscape"
+                      )}
                       alt="AI-Powered Industrial Robotics and Automation"
                       className="w-full h-full object-cover object-center opacity-90"
                     />
-                    
+
                     <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent"></div>
                   </div>
 
@@ -399,8 +618,18 @@ export default function AI() {
                         <i className="ri-robot-line text-white text-lg"></i>
                       </div>
                       <div>
-                        <div className="text-white font-bold">{getContent('robotics_callout_title', 'Smart Automation')}</div>
-                        <div className="text-cyan-400 text-sm font-medium">{getContent('robotics_callout_subtitle', 'AI-Driven Robotics')}</div>
+                        <div className="text-white font-bold">
+                          {getContent(
+                            "robotics_callout_title",
+                            "Smart Automation"
+                          )}
+                        </div>
+                        <div className="text-cyan-400 text-sm font-medium">
+                          {getContent(
+                            "robotics_callout_subtitle",
+                            "AI-Driven Robotics"
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -411,14 +640,23 @@ export default function AI() {
               <div className="space-y-6">
                 <div className="space-y-4">
                   <h3 className="text-3xl lg:text-4xl font-black text-white leading-tight">
-                    {getContent('robotics_title_line1', 'AI in Robotics & Automation:')}
+                    {getContent(
+                      "robotics_title_line1",
+                      "AI in Robotics & Automation:"
+                    )}
                     <span className="block bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent mt-1">
-                      {getContent('robotics_title_line2', 'Optimizing Operations with Intelligent Robotics')}
+                      {getContent(
+                        "robotics_title_line2",
+                        "Optimizing Operations with Intelligent Robotics"
+                      )}
                     </span>
                   </h3>
-                  
+
                   <p className="text-lg text-white/70 leading-relaxed">
-                    {getContent('robotics_description', 'Revolutionizing industrial operations through intelligent robotics that enhance precision, flexibility, and efficiency across automation scenarios.')}
+                    {getContent(
+                      "robotics_description",
+                      "Revolutionizing industrial operations through intelligent robotics that enhance precision, flexibility, and efficiency across automation scenarios."
+                    )}
                   </p>
                 </div>
 
@@ -429,8 +667,18 @@ export default function AI() {
                       <i className="ri-robot-line text-cyan-400 text-sm"></i>
                     </div>
                     <div>
-                      <h4 className="text-white font-bold text-sm">{getContent('robotics_feature_1_title', 'Collaborative Robots (Cobots)')}</h4>
-                      <p className="text-white/60 text-xs">{getContent('robotics_feature_1_text', 'Safe human-robot collaboration in manufacturing')}</p>
+                      <h4 className="text-white font-bold text-sm">
+                        {getContent(
+                          "robotics_feature_1_title",
+                          "Collaborative Robots (Cobots)"
+                        )}
+                      </h4>
+                      <p className="text-white/60 text-xs">
+                        {getContent(
+                          "robotics_feature_1_text",
+                          "Safe human-robot collaboration in manufacturing"
+                        )}
+                      </p>
                     </div>
                   </div>
 
@@ -439,8 +687,18 @@ export default function AI() {
                       <i className="ri-settings-3-line text-blue-400 text-sm"></i>
                     </div>
                     <div>
-                      <h4 className="text-white font-bold text-sm">{getContent('robotics_feature_2_title', 'Industrial Robots')}</h4>
-                      <p className="text-white/60 text-xs">{getContent('robotics_feature_2_text', 'High-precision automated manufacturing systems')}</p>
+                      <h4 className="text-white font-bold text-sm">
+                        {getContent(
+                          "robotics_feature_2_title",
+                          "Industrial Robots"
+                        )}
+                      </h4>
+                      <p className="text-white/60 text-xs">
+                        {getContent(
+                          "robotics_feature_2_text",
+                          "High-precision automated manufacturing systems"
+                        )}
+                      </p>
                     </div>
                   </div>
 
@@ -449,8 +707,18 @@ export default function AI() {
                       <i className="ri-search-eye-line text-cyan-400 text-sm"></i>
                     </div>
                     <div>
-                      <h4 className="text-white font-bold text-sm">{getContent('robotics_feature_3_title', 'Quality Control')}</h4>
-                      <p className="text-white/60 text-xs">{getContent('robotics_feature_3_text', 'AI-powered inspection and defect detection')}</p>
+                      <h4 className="text-white font-bold text-sm">
+                        {getContent(
+                          "robotics_feature_3_title",
+                          "Quality Control"
+                        )}
+                      </h4>
+                      <p className="text-white/60 text-xs">
+                        {getContent(
+                          "robotics_feature_3_text",
+                          "AI-powered inspection and defect detection"
+                        )}
+                      </p>
                     </div>
                   </div>
 
@@ -459,8 +727,18 @@ export default function AI() {
                       <i className="ri-tools-line text-blue-400 text-sm"></i>
                     </div>
                     <div>
-                      <h4 className="text-white font-bold text-sm">{getContent('robotics_feature_4_title', 'Predictive Maintenance')}</h4>
-                      <p className="text-white/60 text-xs">{getContent('robotics_feature_4_text', 'AI-driven equipment health monitoring')}</p>
+                      <h4 className="text-white font-bold text-sm">
+                        {getContent(
+                          "robotics_feature_4_title",
+                          "Predictive Maintenance"
+                        )}
+                      </h4>
+                      <p className="text-white/60 text-xs">
+                        {getContent(
+                          "robotics_feature_4_text",
+                          "AI-driven equipment health monitoring"
+                        )}
+                      </p>
                     </div>
                   </div>
 
@@ -469,8 +747,18 @@ export default function AI() {
                       <i className="ri-truck-line text-cyan-400 text-sm"></i>
                     </div>
                     <div>
-                      <h4 className="text-white font-bold text-sm">{getContent('robotics_feature_5_title', 'Autonomous Mobile Robots (AMRs)')}</h4>
-                      <p className="text-white/60 text-xs">{getContent('robotics_feature_5_text', 'Intelligent navigation and material handling')}</p>
+                      <h4 className="text-white font-bold text-sm">
+                        {getContent(
+                          "robotics_feature_5_title",
+                          "Autonomous Mobile Robots (AMRs)"
+                        )}
+                      </h4>
+                      <p className="text-white/60 text-xs">
+                        {getContent(
+                          "robotics_feature_5_text",
+                          "Intelligent navigation and material handling"
+                        )}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -493,18 +781,23 @@ export default function AI() {
           <div className="text-center space-y-6 mb-16">
             <div className="inline-flex items-center space-x-2 px-4 py-2 bg-cyan-500/10 border border-cyan-500/30 rounded-full">
               <i className="ri-award-line text-cyan-400"></i>
-              <span className="text-cyan-400 text-sm font-semibold">{getContent('advantage_badge', 'Our Advantage')}</span>
+              <span className="text-cyan-400 text-sm font-semibold">
+                {getContent("advantage_badge", "Our Advantage")}
+              </span>
             </div>
 
             <h2 className="text-4xl lg:text-5xl font-black text-white leading-tight">
-              {getContent('advantage_title_line1', 'The Trinova AI')}
+              {getContent("advantage_title_line1", "The Trinova AI")}
               <span className="block bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent mt-1">
-                {getContent('advantage_title_line2', 'Advantage')}
+                {getContent("advantage_title_line2", "Advantage")}
               </span>
             </h2>
 
             <p className="text-xl text-white/70 leading-relaxed max-w-3xl mx-auto">
-              {getContent('advantage_description', 'Why industry leaders choose Trinova AI for their intelligent electronics solutions')}
+              {getContent(
+                "advantage_description",
+                "Why industry leaders choose Trinova AI for their intelligent electronics solutions"
+              )}
             </p>
           </div>
 
@@ -517,8 +810,15 @@ export default function AI() {
                 <div className="w-16 h-16 bg-cyan-500/10 rounded-xl flex items-center justify-center mx-auto group-hover:bg-cyan-500/20 transition-colors duration-300">
                   <i className="ri-lightbulb-flash-line text-cyan-400 text-3xl"></i>
                 </div>
-                <h3 className="text-white font-bold text-lg">{getContent('advantage_1_title', 'Innovative AI Integration')}</h3>
-                <p className="text-white/60 text-sm leading-relaxed">{getContent('advantage_1_text', 'Focus on cutting-edge solutions for functionality and efficiency')}</p>
+                <h3 className="text-white font-bold text-lg">
+                  {getContent("advantage_1_title", "Innovative AI Integration")}
+                </h3>
+                <p className="text-white/60 text-sm leading-relaxed">
+                  {getContent(
+                    "advantage_1_text",
+                    "Focus on cutting-edge solutions for functionality and efficiency"
+                  )}
+                </p>
               </div>
             </div>
 
@@ -529,8 +829,15 @@ export default function AI() {
                 <div className="w-16 h-16 bg-blue-500/10 rounded-xl flex items-center justify-center mx-auto group-hover:bg-blue-500/20 transition-colors duration-300">
                   <i className="ri-user-heart-line text-blue-400 text-3xl"></i>
                 </div>
-                <h3 className="text-white font-bold text-lg">{getContent('advantage_2_title', 'Customer-Centric Approach')}</h3>
-                <p className="text-white/60 text-sm leading-relaxed">{getContent('advantage_2_text', 'Focus on custom-built systems meeting unique industry needs')}</p>
+                <h3 className="text-white font-bold text-lg">
+                  {getContent("advantage_2_title", "Customer-Centric Approach")}
+                </h3>
+                <p className="text-white/60 text-sm leading-relaxed">
+                  {getContent(
+                    "advantage_2_text",
+                    "Focus on custom-built systems meeting unique industry needs"
+                  )}
+                </p>
               </div>
             </div>
 
@@ -541,8 +848,15 @@ export default function AI() {
                 <div className="w-16 h-16 bg-cyan-500/10 rounded-xl flex items-center justify-center mx-auto group-hover:bg-cyan-500/20 transition-colors duration-300">
                   <i className="ri-line-chart-line text-cyan-400 text-3xl"></i>
                 </div>
-                <h3 className="text-white font-bold text-lg">{getContent('advantage_3_title', 'Scalable & Reliable')}</h3>
-                <p className="text-white/60 text-sm leading-relaxed">{getContent('advantage_3_text', 'Focus on AI-powered products designed for long-term scalability and reliability')}</p>
+                <h3 className="text-white font-bold text-lg">
+                  {getContent("advantage_3_title", "Scalable & Reliable")}
+                </h3>
+                <p className="text-white/60 text-sm leading-relaxed">
+                  {getContent(
+                    "advantage_3_text",
+                    "Focus on AI-powered products designed for long-term scalability and reliability"
+                  )}
+                </p>
               </div>
             </div>
 
@@ -553,8 +867,15 @@ export default function AI() {
                 <div className="w-16 h-16 bg-blue-500/10 rounded-xl flex items-center justify-center mx-auto group-hover:bg-blue-500/20 transition-colors duration-300">
                   <i className="ri-customer-service-2-line text-blue-400 text-3xl"></i>
                 </div>
-                <h3 className="text-white font-bold text-lg">{getContent('advantage_4_title', 'End-to-End Support')}</h3>
-                <p className="text-white/60 text-sm leading-relaxed">{getContent('advantage_4_text', 'Focus on comprehensive services from AI development through manufacturing, integration, and post-launch support')}</p>
+                <h3 className="text-white font-bold text-lg">
+                  {getContent("advantage_4_title", "End-to-End Support")}
+                </h3>
+                <p className="text-white/60 text-sm leading-relaxed">
+                  {getContent(
+                    "advantage_4_text",
+                    "Focus on comprehensive services from AI development through manufacturing, integration, and post-launch support"
+                  )}
+                </p>
               </div>
             </div>
           </div>
@@ -572,25 +893,25 @@ export default function AI() {
         <div className="relative max-w-4xl mx-auto px-6 lg:px-8 text-center">
           <div className="space-y-8">
             <h2 className="text-4xl lg:text-5xl font-black text-white leading-tight">
-              {getContent('cta_title_line1', 'Ready to Transform Your')}
+              {getContent("cta_title_line1", "Ready to Transform Your")}
               <span className="block bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent mt-1">
-                {getContent('cta_title_line2', 'Industry with AI?')}
+                {getContent("cta_title_line2", "Industry with AI?")}
               </span>
             </h2>
 
             <p className="text-xl text-white/70 leading-relaxed max-w-2xl mx-auto">
-              {getContent('cta_description', 'Partner with Trinova AI to develop intelligent electronics that revolutionize your business and enhance user experiences.')}
+              {getContent(
+                "cta_description",
+                "Partner with Trinova AI to develop intelligent electronics that revolutionize your business and enhance user experiences."
+              )}
             </p>
 
             {/* CTA Buttons - Not editable */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-              <button className="px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold rounded-xl hover:shadow-2xl hover:shadow-cyan-500/50 hover:scale-105 transition-all duration-300 whitespace-nowrap cursor-pointer group">
-                <span className="flex items-center justify-center space-x-2">
-                  <span>Start Your AI Project</span>
-                  <i className="ri-arrow-right-line group-hover:translate-x-1 transition-transform"></i>
-                </span>
-              </button>
-              <button className="px-8 py-4 bg-white/5 border-2 border-cyan-400/50 text-white font-bold rounded-xl hover:bg-cyan-400/10 hover:border-cyan-400 hover:scale-105 backdrop-blur-sm transition-all duration-300 whitespace-nowrap cursor-pointer group">
+              <button
+                onClick={() => navigate("/contact")}
+                className="px-8 py-4 bg-white/5 border-2 border-cyan-400/50 text-white font-bold rounded-xl hover:bg-cyan-400/10 hover:border-cyan-400 hover:scale-105 backdrop-blur-sm transition-all duration-300 whitespace-nowrap cursor-pointer group"
+              >
                 <span className="flex items-center justify-center space-x-2">
                   <span>Schedule Consultation</span>
                   <i className="ri-calendar-line group-hover:scale-110 transition-transform"></i>

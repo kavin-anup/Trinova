@@ -4,10 +4,12 @@ import { Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { heroSlidesAPI, homeContentAPI, servicesAPI } from "../../services/api";
 import Footer from "../../components/layout/Footer";
 
 export default function Home() {
+  const navigate = useNavigate();
   const [heroSlides, setHeroSlides] = useState<any[]>([]);
   const [homeContent, setHomeContent] = useState<any>({});
   const [services, setServices] = useState<any[]>([]);
@@ -154,7 +156,27 @@ export default function Home() {
                       {/* CTAs */}
                       {slide.primary_cta_label && (
                         <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-                          <button className="px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold rounded-xl hover:shadow-2xl hover:shadow-cyan-500/50 hover:scale-105 transition-all duration-300 whitespace-nowrap cursor-pointer group">
+                          <button 
+                            onClick={() => {
+                              const ctaUrl = slide.primary_cta_url;
+                              if (ctaUrl) {
+                                if (ctaUrl.startsWith('http')) {
+                                  window.open(ctaUrl, '_blank');
+                                } else {
+                                  navigate(ctaUrl);
+                                }
+                              } else {
+                                // Default behavior: navigate to services or contact based on label
+                                const label = slide.primary_cta_label.toLowerCase();
+                                if (label.includes('service') || label.includes('explore')) {
+                                  navigate('/services');
+                                } else {
+                                  navigate('/contact');
+                                }
+                              }
+                            }}
+                            className="px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold rounded-xl hover:shadow-2xl hover:shadow-cyan-500/50 hover:scale-105 transition-all duration-300 whitespace-nowrap cursor-pointer group"
+                          >
                             <span className="flex items-center justify-center space-x-2">
                               <span>{slide.primary_cta_label}</span>
                               {slide.primary_cta_icon && (
@@ -361,6 +383,7 @@ export default function Home() {
                 .map((service) => (
                   <div
                     key={service.id}
+                    onClick={() => navigate('/services')}
                     className="group relative bg-[#1a1a2e]/50 backdrop-blur-md border border-cyan-500/20 rounded-xl p-6 hover:border-cyan-400/50 hover:bg-[#1a1a2e]/80 transition-all duration-300 cursor-pointer"
                   >
                     <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-blue-600/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
