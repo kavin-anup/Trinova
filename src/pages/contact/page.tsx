@@ -72,6 +72,15 @@ export default function Contact() {
     return content[key]?.value || fallback;
   };
 
+  // Social media links with dynamic URLs (similar to Footer)
+  const socialLinks = [
+    { icon: "ri-linkedin-fill", href: siteConfig.linkedin_url || "#", visible: !!siteConfig.linkedin_url },
+    { icon: "ri-instagram-line", href: siteConfig.instagram_url || "#", visible: !!siteConfig.instagram_url },
+    { icon: "ri-facebook-fill", href: siteConfig.facebook_url || "#", visible: !!siteConfig.facebook_url },
+    { icon: "ri-twitter-x-line", href: siteConfig.twitter_url || "#", visible: !!siteConfig.twitter_url },
+    { icon: "ri-youtube-fill", href: siteConfig.youtube_url || "#", visible: !!siteConfig.youtube_url },
+  ].filter(link => link.visible);
+
   // Client-side validation
   const validateField = (_name: string, value: string, field: FormField): string => {
     if (field.required && !value.trim()) {
@@ -451,8 +460,8 @@ export default function Contact() {
                 <i className="ri-error-warning-line mr-1"></i>
                 {error}
               </p>
-            )}
-          </div>
+          )}
+        </div>
         );
     }
   };
@@ -602,20 +611,24 @@ export default function Contact() {
               </div>
 
               {/* Social Links */}
+              {socialLinks.length > 0 && (
               <div className="pt-6">
                 <h3 className="text-white font-bold text-lg mb-4">Follow Us</h3>
                 <div className="flex items-center space-x-4">
-                  <a href={getContent('social_linkedin', '#')} target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 hover:border-cyan-400/50 rounded-lg flex items-center justify-center transition-all duration-300 cursor-pointer group">
-                    <i className="ri-linkedin-fill text-cyan-400 group-hover:text-cyan-300 text-xl"></i>
-                  </a>
-                  <a href={getContent('social_instagram', '#')} target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 hover:border-cyan-400/50 rounded-lg flex items-center justify-center transition-all duration-300 cursor-pointer group">
-                    <i className="ri-instagram-line text-cyan-400 group-hover:text-cyan-300 text-xl"></i>
-                  </a>
-                  <a href={getContent('social_facebook', '#')} target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 hover:border-cyan-400/50 rounded-lg flex items-center justify-center transition-all duration-300 cursor-pointer group">
-                    <i className="ri-facebook-fill text-cyan-400 group-hover:text-cyan-300 text-xl"></i>
-                  </a>
+                    {socialLinks.map((link) => (
+                      <a
+                        key={link.icon}
+                        href={link.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-12 h-12 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 hover:border-cyan-400/50 rounded-lg flex items-center justify-center transition-all duration-300 cursor-pointer group"
+                      >
+                        <i className={`${link.icon} text-cyan-400 group-hover:text-cyan-300 text-xl`}></i>
+                      </a>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
 
             {/* Contact Form */}
@@ -651,21 +664,21 @@ export default function Contact() {
                     {firstTwoFields.length === 2 && (
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {firstTwoFields.map(field => renderFormField(field))}
-                      </div>
+                  </div>
                     )}
 
                     {/* Single field if only one in first two */}
                     {firstTwoFields.length === 1 && (
-                      <div>
+                  <div>
                         {renderFormField(firstTwoFields[0])}
-                      </div>
+                  </div>
                     )}
 
                     {/* Remaining fields */}
                     {remainingFields.map(field => renderFormField(field))}
 
-                    <button 
-                      type="submit"
+                  <button 
+                    type="submit"
                       disabled={submitting || !isFormValid()}
                       className="w-full px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold rounded-xl hover:shadow-2xl hover:shadow-cyan-500/50 hover:scale-105 transition-all duration-300 whitespace-nowrap cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                     >
@@ -677,8 +690,8 @@ export default function Contact() {
                       ) : (
                         'Send Message'
                       )}
-                    </button>
-                  </form>
+                  </button>
+                </form>
                 ) : (
                   <div className="text-center py-8 text-white/40">
                     <i className="ri-file-list-line text-4xl mb-2"></i>
@@ -718,6 +731,24 @@ export default function Contact() {
                 referrerPolicy="no-referrer-when-downgrade"
                 title="Trinova AI Office Location"
               ></iframe>
+            </div>
+
+            {/* Get Directions Button */}
+            <div className="flex justify-center">
+              <button
+                onClick={() => {
+                  const address = `${getContent('address_line1', 'No-1461, 2nd floor, 14th cross road,')} ${getContent('address_line2', 'Ananth Nagar phase2, Electronic City,')} ${getContent('address_line3', 'Bangalore - 560100, India')}`;
+                  const encodedAddress = encodeURIComponent(address.trim());
+                  const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodedAddress}`;
+                  window.open(directionsUrl, '_blank', 'noopener,noreferrer');
+                }}
+                className="px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold rounded-xl hover:shadow-2xl hover:shadow-cyan-500/50 hover:scale-105 transition-all duration-300 whitespace-nowrap cursor-pointer group"
+              >
+                <span className="flex items-center justify-center space-x-2">
+                  <span>Get Directions</span>
+                  <i className="ri-map-pin-line group-hover:scale-110 transition-transform"></i>
+                </span>
+              </button>
             </div>
           </div>
         </div>
