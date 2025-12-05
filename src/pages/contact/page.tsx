@@ -79,6 +79,7 @@ export default function Contact() {
     { icon: "ri-facebook-fill", href: siteConfig.facebook_url || "#", visible: !!siteConfig.facebook_url },
     { icon: "ri-twitter-x-line", href: siteConfig.twitter_url || "#", visible: !!siteConfig.twitter_url },
     { icon: "ri-youtube-fill", href: siteConfig.youtube_url || "#", visible: !!siteConfig.youtube_url },
+    { icon: "ri-whatsapp-fill", href: siteConfig.whatsapp_url || "#", visible: !!siteConfig.whatsapp_url },
   ].filter(link => link.visible);
 
   // Client-side validation

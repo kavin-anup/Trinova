@@ -88,7 +88,9 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                 <p className="text-white font-medium text-sm truncate">
                   {admin?.email}
                 </p>
-                <p className="text-cyan-400 text-xs">{admin?.role}</p>
+                <p className="text-cyan-400 text-xs">
+                  {admin?.role === 'super_admin' ? 'admin' : admin?.role || 'admin'}
+                </p>
               </div>
             )}
           </div>

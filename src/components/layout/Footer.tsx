@@ -28,6 +28,7 @@ export default function Footer() {
     { icon: "ri-facebook-fill", href: config.facebook_url || "#", visible: !!config.facebook_url },
     { icon: "ri-twitter-x-line", href: config.twitter_url || "#", visible: !!config.twitter_url },
     { icon: "ri-youtube-fill", href: config.youtube_url || "#", visible: !!config.youtube_url },
+    { icon: "ri-whatsapp-fill", href: config.whatsapp_url || "#", visible: !!config.whatsapp_url },
   ].filter(link => link.visible);
 
   const logoUrl = config.footer_logo_url || config.header_logo_url;

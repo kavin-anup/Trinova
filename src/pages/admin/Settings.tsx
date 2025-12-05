@@ -27,7 +27,8 @@ export default function Settings() {
     facebook_url: '',
     twitter_url: '',
     linkedin_url: '',
-    youtube_url: ''
+    youtube_url: '',
+    whatsapp_url: ''
   });
 
   // Branding State
@@ -70,6 +71,7 @@ export default function Settings() {
       if (config.twitter_url) setSocialMedia(prev => ({ ...prev, twitter_url: config.twitter_url }));
       if (config.linkedin_url) setSocialMedia(prev => ({ ...prev, linkedin_url: config.linkedin_url }));
       if (config.youtube_url) setSocialMedia(prev => ({ ...prev, youtube_url: config.youtube_url }));
+      if (config.whatsapp_url) setSocialMedia(prev => ({ ...prev, whatsapp_url: config.whatsapp_url }));
 
       // Parse branding
       if (config.header_logo_url) setBranding(prev => ({ ...prev, header_logo_url: config.header_logo_url }));
@@ -413,6 +415,26 @@ export default function Settings() {
                     placeholder="https://youtube.com/@yourchannel"
                     className="w-full px-4 py-2 bg-[#252525]/50 border border-cyan-500/20 rounded-lg text-white focus:border-cyan-400 focus:outline-none"
                   />
+                </div>
+
+                <div>
+                  <label className="block text-white/80 font-medium mb-2">
+                    <i className="ri-whatsapp-line mr-2 text-green-500"></i>
+                    WhatsApp Chat Link
+                  </label>
+                  <input
+                    type="url"
+                    value={socialMedia.whatsapp_url}
+                    onChange={(e) => {
+                      setSocialMedia({ ...socialMedia, whatsapp_url: e.target.value });
+                      setHasChanges(true);
+                    }}
+                    placeholder="https://wa.me/1234567890 or https://chat.whatsapp.com/invitecode"
+                    className="w-full px-4 py-2 bg-[#252525]/50 border border-cyan-500/20 rounded-lg text-white focus:border-cyan-400 focus:outline-none"
+                  />
+                  <p className="text-white/50 text-xs mt-1">
+                    Enter WhatsApp chat link (e.g., https://wa.me/1234567890 or WhatsApp group invite link)
+                  </p>
                 </div>
               </div>
 
