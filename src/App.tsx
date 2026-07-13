@@ -3,6 +3,7 @@ import { AppRoutes } from "./router";
 import { I18nextProvider } from "react-i18next";
 import i18n from "./i18n";
 import { AuthProvider } from "./contexts/AuthContext";
+import { ChatbotWidget } from "./components/chatbot/ChatbotWidget";
 
 
 function App() {
@@ -11,6 +12,8 @@ function App() {
       <BrowserRouter>
         <AuthProvider>
           <AppRoutes />
+          {/* Global floating AI chatbot — rendered outside page routes so it persists on every page */}
+          <ChatbotWidget />
         </AuthProvider>
       </BrowserRouter>
     </I18nextProvider>

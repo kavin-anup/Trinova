@@ -28,6 +28,10 @@ import AdminBlogsContent from "../pages/admin/BlogsContent";
 import AdminContactContent from "../pages/admin/ContactContent";
 import ProtectedRoute from "../components/admin/ProtectedRoute";
 import AdminRedirect from "../pages/admin/AdminRedirect";
+import KnowledgeBase from "../pages/admin/KnowledgeBase";
+import ChatbotAnalytics from "../pages/admin/ChatbotAnalytics";
+import KnowledgeReview from "../pages/admin/KnowledgeReview";
+import ChatbotConversations from "../pages/admin/ChatbotConversations";
 
 const routes: RouteObject[] = [
   {
@@ -192,6 +196,38 @@ const routes: RouteObject[] = [
     element: (
       <ProtectedRoute>
         <AdminSettings />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/admin/knowledge-base",
+    element: (
+      <ProtectedRoute>
+        <KnowledgeBase />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/admin/chatbot-analytics",
+    element: (
+      <ProtectedRoute>
+        <ChatbotAnalytics />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/admin/knowledge-review",
+    element: (
+      <ProtectedRoute>
+        <KnowledgeReview />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/admin/chatbot-conversations",
+    element: (
+      <ProtectedRoute>
+        <ChatbotConversations />
       </ProtectedRoute>
     ),
   },
