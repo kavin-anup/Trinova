@@ -12,23 +12,38 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   const navigate = useNavigate();
   const { admin, logout } = useAuth();
 
-  const menuItems = [
-    { path: '/admin/dashboard', icon: 'ri-dashboard-line', label: 'Dashboard' },
-    { path: '/admin/hero-slides', icon: 'ri-slideshow-3-line', label: 'Hero Slides' },
-    { path: '/admin/home-content', icon: 'ri-home-line', label: 'Home Content' },
-    { path: '/admin/services-content', icon: 'ri-file-edit-line', label: 'Services Content' },
-    { path: '/admin/ems-content', icon: 'ri-file-edit-line', label: 'EMS Content' },
-    { path: '/admin/ai-content', icon: 'ri-file-edit-line', label: 'AI Content' },
-    { path: '/admin/our-edge-content', icon: 'ri-file-edit-line', label: 'Our Edge Content' },
-    { path: '/admin/blogs-content', icon: 'ri-file-edit-line', label: 'Blogs Content' },
-    { path: '/admin/testimonials-content', icon: 'ri-file-edit-line', label: 'Testimonials Content' },
-    { path: '/admin/contact-content', icon: 'ri-file-edit-line', label: 'Contact Content' },
-    // { path: '/admin/services', icon: 'ri-service-line', label: 'Services' },
-    // { path: '/admin/testimonials', icon: 'ri-star-line', label: 'Testimonials' },
-    { path: '/admin/inquiries', icon: 'ri-mail-line', label: 'Inquiries' },
-    { path: '/admin/media', icon: 'ri-image-line', label: 'Media Library' },
-    { path: '/admin/settings', icon: 'ri-settings-3-line', label: 'Settings' },
+  const menuGroups = [
+    {
+      label: 'Content Management',
+      items: [
+        { path: '/admin/dashboard', icon: 'ri-dashboard-line', label: 'Dashboard' },
+        { path: '/admin/hero-slides', icon: 'ri-slideshow-3-line', label: 'Hero Slides' },
+        { path: '/admin/home-content', icon: 'ri-home-line', label: 'Home Content' },
+        { path: '/admin/services-content', icon: 'ri-file-edit-line', label: 'Services Content' },
+        { path: '/admin/ems-content', icon: 'ri-file-edit-line', label: 'EMS Content' },
+        { path: '/admin/ai-content', icon: 'ri-file-edit-line', label: 'AI Content' },
+        { path: '/admin/our-edge-content', icon: 'ri-file-edit-line', label: 'Our Edge Content' },
+        { path: '/admin/blogs-content', icon: 'ri-file-edit-line', label: 'Blogs Content' },
+        { path: '/admin/testimonials-content', icon: 'ri-file-edit-line', label: 'Testimonials' },
+        { path: '/admin/contact-content', icon: 'ri-file-edit-line', label: 'Contact Content' },
+        { path: '/admin/inquiries', icon: 'ri-mail-line', label: 'Inquiries' },
+        { path: '/admin/media', icon: 'ri-image-line', label: 'Media Library' },
+        { path: '/admin/settings', icon: 'ri-settings-3-line', label: 'Settings' },
+      ],
+    },
+    {
+      label: 'AI & Chatbot',
+      items: [
+        { path: '/admin/knowledge-base', icon: 'ri-brain-line', label: 'Knowledge Base' },
+        { path: '/admin/chatbot-conversations', icon: 'ri-chat-history-line', label: 'Conversations' },
+        { path: '/admin/chatbot-analytics', icon: 'ri-bar-chart-2-line', label: 'Analytics' },
+        { path: '/admin/knowledge-review', icon: 'ri-question-answer-line', label: 'Knowledge Review' },
+      ],
+    },
   ];
+
+  // Flatten for header label lookup
+  const menuItems = menuGroups.flatMap(g => g.items);
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -60,20 +75,27 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 p-4 space-y-2">
-          {menuItems.map((item) => (
-            <Link
-              key={item.path}
-              to={item.path}
-              className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-all ${
-                isActive(item.path)
-                  ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30'
-                  : 'text-white/70 hover:bg-cyan-500/10 hover:text-cyan-400'
-              }`}
-            >
-              <i className={`${item.icon} text-xl`}></i>
-              {sidebarOpen && <span className="font-medium">{item.label}</span>}
-            </Link>
+        <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+          {menuGroups.map((group) => (
+            <div key={group.label} className="mb-3">
+              {sidebarOpen && (
+                <p className="text-white/25 text-[10px] font-bold uppercase tracking-widest px-3 py-2">{group.label}</p>
+              )}
+              {group.items.map((item) => (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  className={`flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-all mb-0.5 ${
+                    isActive(item.path)
+                      ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30'
+                      : 'text-white/70 hover:bg-cyan-500/10 hover:text-cyan-400'
+                  }`}
+                >
+                  <i className={`${item.icon} text-xl shrink-0`}></i>
+                  {sidebarOpen && <span className="font-medium text-sm">{item.label}</span>}
+                </Link>
+              ))}
+            </div>
           ))}
         </nav>
 
